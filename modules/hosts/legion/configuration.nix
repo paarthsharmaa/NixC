@@ -10,15 +10,19 @@
     {
       imports =
         [ # Include the results of the hardware scan.
-          self.nixosModules.legionConfiguration
+          self.nixosModules.legionHardware
           self.nixosModules.niri
           self.nixosModules.noctalia
           self.nixosModules.homeManager
         ];
 
+      # Nix Flakes feature
+      nix.settings.experimental-features = [ "nix-command" "flakes" ];
+      
       # Bootloader.
       boot.loader.systemd-boot.enable = true;
       boot.loader.efi.canTouchEfiVariables = true;
+
 
       # Use latest kernel.
       boot.kernelPackages = pkgs.linuxPackages_latest;

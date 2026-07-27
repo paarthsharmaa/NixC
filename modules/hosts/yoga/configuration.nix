@@ -20,7 +20,8 @@
 
 	  networking.hostName = "yoga"; # Define your hostname.
 	  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
+         
+	  # Nix Flakes feature
 	  nix.settings.experimental-features = ["nix-command" "flakes"];
 
 	  # Configure network proxy if necessary
