@@ -1,11 +1,12 @@
-{withModuleSystem, ...}: {
-  flake.nixosModules.vscodium = withModuleSystem (
+{moduleWithSystem, ...}: {
+  flake.nixosModules.vscodium = moduleWithSystem (
     {self', ...}: {...}: {
-      environment.packages = [
+      environment.systemPackages = [
         self'.packages.vscodium
       ];
     }
   );
+
   perSystem = {pkgs, ...}: {
     packages.vscodium = pkgs.vscodium;
   };
