@@ -1,12 +1,13 @@
-{ self, inputs, ... }: {
-
+{
+  self,
+  inputs,
+  ...
+}: {
   flake.nixosConfigurations.legion = inputs.nixpkgs.lib.nixosSystem {
     modules = with self.nixosModules; [
-			desktop
+      workstation
       legionConfiguration
-			legionHardware
-
+      legionHardware
     ];
   };
-
 }

@@ -1,6 +1,6 @@
 {self, ...}: {
   flake.nixosModules.desktop = {
-    modules = with self.nixosModules; [
+    imports = with self.nixosModules; [
       core
 
       audio

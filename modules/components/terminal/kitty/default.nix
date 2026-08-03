@@ -15,19 +15,17 @@
       fontsConf = pkgs.makeFontsConf {
         fontDirectories = [jetbrains-mono];
       };
-    in
       inputs.wrappers.wrappers.kitty.wrap {
+				in
         inherit pkgs;
         environment = {
           "FONTCONFIG_FILE" = "${fontsConf}";
         };
         font = {
           name = "JetbrainsMono Nerd Font Mono";
-          size = 11;
+          size = 12;
         };
         settings = {
-          font_size = 12;
-          scrollbar = "never";
           window_padding_width = 9;
           background_opacity = 0.50;
           confirm_os_window_close = 0;

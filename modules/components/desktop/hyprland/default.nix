@@ -28,7 +28,6 @@
         fuzzel
         grim
         hyprlock
-        kitty
         playerctl
         slurp
         wireplumber

@@ -1,9 +1,8 @@
 {...}: {
-  flake.nixosModules.user = {pkgs, ...}: {
+  flake.nixosModules.user = {...}: {
     users.users.paarth = {
       isNormalUser = true;
       description = "Paarth Sharma";
-      shell = pkgs.bashInteractive;
 
       extraGroups = [
         "audio"
