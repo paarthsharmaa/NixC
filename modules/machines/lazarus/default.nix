@@ -1,8 +1,12 @@
 { self, inputs, ...}: {
 
   flake.nixosConfigurations.lazarus = inputs.nixpkgs.lib.nixosSystem {
-    modules = [
-      self.nixosModules.lazarusConfiguration
+    modules = with self.nixosModules; [
+      core
+			network
+
+			lazarusConfiguration
+			lazarusHardware
     ];
   };
 

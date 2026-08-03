@@ -6,7 +6,7 @@
   flake.nixosModules.nvim = moduleWithSystem (
     {self', ...}: {...}: {
       environment.systemPackages = [
-        self'.packages.nivm
+        self'.packages.nvim
       ];
       environment.variables = {
         EDITOR = "nvim";

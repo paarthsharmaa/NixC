@@ -1,2 +1,4 @@
 result
 result-*
+.direnv
+modules/components/desktop/quickshell/config/qmlls.ini

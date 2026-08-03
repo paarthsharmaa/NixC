@@ -1,15 +1,15 @@
-{
-  self, 
-  moduleWithSystem,
-  ...
-}: {
-  flake.nixosModules.desktop = moduleWithSystem ({ ... }: let 
-    modules =  with self.nixosModules; [
+{self, ...}: {
+  flake.nixosModules.desktop = {
+    modules = with self.nixosModules; [
       core
-      hyprland
+
+      audio
       network
+      nix-ld
+
+      sddm
+      hyprland
+      quickshell
     ];
-  in {
-    imports = modules;
-  });
+  };
 }

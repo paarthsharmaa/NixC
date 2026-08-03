@@ -1,15 +1,5 @@
-{
-  self, 
-  inputs,
-  ...
-}: {
-  flake.nixosModuels.hardware = {
-    pkgs,
-    lib,
-    ...
-  }: {
-    hardware = {
-      bluetooth.enable = true;
-    };
+{...}: {
+  flake.nixosModules.hardware = {...}: {
+    hardware.bluetooth.enable = true;
   };
 }

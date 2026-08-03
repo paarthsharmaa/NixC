@@ -1,6 +1,6 @@
 {
   # Description
-  Description = "Dendritic NixOS configuration for my systems.";
+  description = "Dendritic NixOS configuration for my systems.";
 
   inputs = {
     # System
