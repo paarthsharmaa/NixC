@@ -398,8 +398,55 @@ FocusScope {
                     MouseArea { id: skipTileMa2; anchors.fill: parent; hoverEnabled: true; onClicked: Media.next() }
                 }
 
-                // Placeholder 4th tile (spacer)
+                // Placeholder 4th tile (spacer) (swaync)
                 Item { width: (parent.width - 30) / 4; height: 70 }
+                Rectangle {
+                    width: (parent.width - 30) / 4
+                    height: 84
+                    radius: 18
+                    color: Colors.color0
+
+                    Column {
+                        anchors.centerIn: parent
+                        spacing: 6
+
+                        Text {
+                            anchors.horizontalCenter:
+                                parent.horizontalCenter
+
+                            text: "󰂚"
+                            color: Colors.color8
+                            font.pixelSize: 24
+                            font.family:
+                                "JetBrainsMono Nerd Font"
+                        }
+
+                        Text {
+                            anchors.horizontalCenter:
+                                parent.horizontalCenter
+
+                            text: "Notifications"
+                            color: Colors.color8
+                            font.pixelSize: 14
+                            font.family:
+                                "JetBrainsMono Nerd Font"
+                        }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+
+                        onClicked: {
+                            Quickshell.execDetached([
+                                "swaync-client",
+                                "-t",
+                                "-sw"
+                            ])
+
+                            root.dismiss()
+                        }
+                    }
+                }
             }
 
             Rectangle { width: parent.width; height: 1; color: Colors.color0 }
@@ -559,7 +606,6 @@ FocusScope {
             Row {
                 width: parent.width; spacing: 12
 
-                // Nemo files
                 Rectangle {
                     width: (parent.width - 30) / 4; height: 84; radius: 18; color: Colors.color0
                     scale: filesMa.containsMouse ? 0.93 : 1.0
@@ -570,8 +616,10 @@ FocusScope {
                         Text { anchors.horizontalCenter: parent.horizontalCenter; text: "Files"; color: Colors.color8; font.pixelSize: 17; font.family: "JetBrainsMono Nerd Font" }
                     }
                     MouseArea { id: filesMa; anchors.fill: parent; hoverEnabled: true
-                        onClicked: { Quickshell.execDetached(["/run/current-system/sw/bin/nemo"]); root.dismiss() } }
-                }
+                        Quickshell.execDetached([
+                          "dolphin"
+                        ])  
+                    }
 
                 // Sysinfo shortcut
                 Rectangle {
@@ -584,8 +632,14 @@ FocusScope {
                         Text { anchors.horizontalCenter: parent.horizontalCenter; text: "Stats"; color: Colors.color8; font.pixelSize: 17; font.family: "JetBrainsMono Nerd Font" }
                     }
                     MouseArea { id: sysMa; anchors.fill: parent; hoverEnabled: true
-                        onClicked: { Quickshell.execDetached(["quickshell", "ipc", "call", "island", "sysinfo"]); root.dismiss() } }
-                }
+                        Quickshell.execDetached([
+                            "qs",
+                            "ipc",
+                            "call",
+                            "island",
+                            "sysinfo"
+                        ])  
+                    }
 
                 // Spacers (fill grid after Do Not Disturb removal)
                 Item { width: (parent.width - 30) / 4; height: 84 }

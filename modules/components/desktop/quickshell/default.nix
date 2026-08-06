@@ -3,29 +3,68 @@
   ...
 }: {
   flake.nixosModules.quickshell = moduleWithSystem (
-    {self', ...}: {lib, ...}: {
-      # Contents become:
-      # /etc/xdg/quickshell/shell.qml
-      # /etc/xdg/quickshell/Pill.qml
-      # /etc/xdg/quickshell/panels/...
-      # /etc/xdg/quickshell/services/...
+    {
+      self',
+      pkgs,
+      ...
+    }: {lib, ...}: {
+      # Bare XDG config deliberately permits running plain `qs`.
       environment.etc."xdg/quickshell".source =
         ./config;
 
       environment.systemPackages = [
         self'.packages.quickshell
+        self'.packages.awww
+        self'.packages.iris
+        self'.packages.swaync
+        self'.packages.kitty
+
+        # Shell and standard command dependencies
+        pkgs.bash
+        pkgs.coreutils
+        pkgs.findutils
+        pkgs.gawk
+        pkgs.gnugrep
+        pkgs.gnused
+        pkgs.procps
+        pkgs.iproute2
+
+        # Services called from QML
+        pkgs.pamixer
+        pkgs.brightnessctl
+        pkgs.playerctl
+        pkgs.networkmanager
+        pkgs.power-profiles-daemon
+        pkgs.hyprsunset
+
+        # Visualizer and wallpaper thumbnails
+        pkgs.cava
+        pkgs.perl
+        pkgs.imagemagick
+
+        # Notifications and appearance
+        pkgs.libnotify
+        pkgs.glib
       ];
 
-      environment.sessionVariables = {
-        WALLPAPER_DIR = "$HOME/Pictures/Wallpapers";
-      };
+      services.power-profiles-daemon.enable = true;
 
       systemd.user.services.quickshell = {
         description = "Quickshell desktop shell";
 
         wantedBy = ["graphical-session.target"];
         partOf = ["graphical-session.target"];
-        after = ["graphical-session.target"];
+
+        wants = [
+          "awww.service"
+          "swaync.service"
+        ];
+
+        after = [
+          "graphical-session.target"
+          "awww.service"
+          "swaync.service"
+        ];
 
         serviceConfig = {
           ExecStart =
@@ -39,6 +78,7 @@
   );
 
   perSystem = {pkgs, ...}: {
-    packages.quickshell = pkgs.quickshell;
+    packages.quickshell =
+      pkgs.quickshell;
   };
 }

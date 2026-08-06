@@ -33,6 +33,22 @@
         "type": "github"
       }
     },
+    "iris": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1785960967,
+        "narHash": "sha256-l2X1TVTHfYCqDZJcvvgVLXU/9NXcNb2rGHiN3PgfswE=",
+        "owner": "Harman1307",
+        "repo": "iris",
+        "rev": "0b7daec66dc5f84dfc557f437c6b73a4b59399c0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Harman1307",
+        "repo": "iris",
+        "type": "github"
+      }
+    },
     "nixos-hardware": {
       "inputs": {
         "nixpkgs": [
@@ -88,6 +104,7 @@
       "inputs": {
         "flake-parts": "flake-parts",
         "import-tree": "import-tree",
+        "iris": "iris",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "wrappers": "wrappers"

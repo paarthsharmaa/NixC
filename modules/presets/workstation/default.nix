@@ -5,6 +5,10 @@
       development
       qol
       ai
+
+      kitty
+      vscodium
+      tools
     ];
 
     fonts.packages = with pkgs; [

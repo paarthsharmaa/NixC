@@ -1,3 +1,6 @@
+//@ pragma ShellId nixc
+//@ pragma CacheDir $BASE/nixc
+
 import QtQuick
 import Quickshell
 import Quickshell.Io
@@ -84,7 +87,6 @@ ShellRoot {
     IpcHandler {
         target: "island"
         function launcher():       void { root.toggle("launcher")       }
-        function scriptlauncher(): void { root.toggle("scriptlauncher") }
         function controlcenter():  void { root.toggle("controlcenter")  }
         function mixer():          void { root.toggle("controlcenter")  }
         function sysinfo():        void { root.toggle("sysinfo")        }
@@ -93,7 +95,6 @@ ShellRoot {
         function media():          void { root.toggle("media")          }
         function powerprofile():   void { root.toggle("powerprofile")   }
         function visualizer():     void { root.toggle("visualizer")     }
-        function lockscreen():     void { root.toggle("lockscreen")     }
         function close():          void { root.panel = ""               }
 
         function volUp():   void { Audio.setVolume(Audio.volume + 5);     root.showOsd("volume")     }

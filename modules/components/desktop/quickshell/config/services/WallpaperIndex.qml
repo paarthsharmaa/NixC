@@ -17,9 +17,16 @@ import Quickshell.Io
 //      unconditional rescan on every open.
 Item {
     id: root
+    
+    readonly property string wallDir:
+        Quickshell.env("HOME")
+            + "/Pictures/Wallpapers"
+            
+    readonly property string thumbScript:
+        Quickshell.shellPath(
+            "extra/scripts/wallpaper-thumbs.sh"
+        )
 
-    readonly property string wallDir:     Quickshell.env("WALLPAPER_DIR")
-    readonly property string thumbScript: Quickshell.env("HOME") + "/scripts/wallpaper-thumbs.sh"
     readonly property string thumbCache:  Quickshell.env("HOME") + "/.cache/wallpaper-thumbs"
 
     property ListModel model: ListModel {}

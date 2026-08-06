@@ -17,7 +17,6 @@ Item {
     // ever, not on every open.
     property bool panelVisible: false
 
-    readonly property string wallScript: Quickshell.env("HOME") + "/scripts/wallpaper.sh"
     readonly property int cols: 4
     readonly property int gap:  8
 
@@ -90,144 +89,17 @@ Item {
         }
     }
 
-    // Vibrancy slider: drag to change wallust's saturation live. Manual
-    // hex->HSV parsing here instead of Qt.color(...).hsvSaturation --
-    // that method isn't guaranteed present in every Quickshell QML engine
-    // build, and a throwing binding was the likely reason this never
-    // rendered right in the first place. Parsing three hex pairs and
-    // taking (max-min)/max is the standard HSV saturation formula, no Qt
-    // color API needed at all.
-    Item {
-        id: vibrancySlider
-        anchors { top: modeToggle.bottom; horizontalCenter: parent.horizontalCenter; topMargin: 14 }
-        width: 220; height: 20
-
-        function hexSaturation(hex) {
-            const h = hex.replace("#", "")
-            const r = parseInt(h.substring(0, 2), 16)
-            const g = parseInt(h.substring(2, 4), 16)
-            const b = parseInt(h.substring(4, 6), 16)
-            const max = Math.max(r, g, b)
-            const min = Math.min(r, g, b)
-            return max === 0 ? 0 : (max - min) / max
-        }
-
-        // Seed value: average saturation of the six accent colors in the
-        // CURRENTLY active palette, read once when the panel first shows
-        // this wallpaper's colors. After that the slider is fully
-        // user-driven (sliderPct), not recomputed from Colors, so
-        // dragging doesn't fight with the palette updating underneath it.
-        function seedFromPalette() {
-            const cols = [Colors.color1, Colors.color2, Colors.color3,
-                          Colors.color4, Colors.color5, Colors.color6]
-            let sum = 0
-            for (let i = 0; i < cols.length; i++) sum += vibrancySlider.hexSaturation(cols[i])
-            return Math.round((sum / cols.length) * 100)
-        }
-
-        property int sliderPct: 70
-        property bool seeded: false
-
-        Component.onCompleted: {
-            // wallpaper-vibrancy.sh persists the last user-set value to
-            // this file; if it exists, that wins over a palette guess
-            // since it reflects an explicit choice rather than a
-            // derived reading.
-            satFileProc.running = true
-        }
-
-        Process {
-            id: satFileProc
-            command: ["cat", Quickshell.env("HOME") + "/.cache/wallust/saturation"]
-            stdout: StdioCollector {
-                onStreamFinished: {
-                    const n = parseInt(text.trim(), 10)
-                    vibrancySlider.sliderPct = Number.isNaN(n)
-                        ? vibrancySlider.seedFromPalette()
-                        : Math.max(0, Math.min(100, n))
-                    vibrancySlider.seeded = true
-                }
-            }
-        }
-
-        // Debounced so dragging doesn't spawn a wallust process per
-        // pixel of mouse movement -- 120ms of no further movement before
-        // the actual re-theme runs, same debounce shape as a live search
-        // box.
-        Timer {
-            id: applyTimer
-            interval: 120
-            onTriggered: Quickshell.execDetached([
-                "bash", Quickshell.env("HOME") + "/scripts/wallpaper-vibrancy.sh",
-                String(vibrancySlider.sliderPct)
-            ])
-        }
-
-        Text {
-            id: vibrancyLabel
-            anchors.left: parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            text: "Vibrancy"
-            font.pixelSize: 11; font.family: "JetBrainsMono Nerd Font"
-            color: Colors.color8
-        }
-
-        Text {
-            id: vibrancyPct
-            anchors.right: parent.right
-            anchors.verticalCenter: parent.verticalCenter
-            text: vibrancySlider.sliderPct + "%"
-            font.pixelSize: 11; font.family: "JetBrainsMono Nerd Font"
-            color: Colors.color8
-        }
-
-        Rectangle {
-            id: track
-            anchors.left: vibrancyLabel.right
-            anchors.leftMargin: 8
-            anchors.right: vibrancyPct.left
-            anchors.rightMargin: 8
-            anchors.verticalCenter: parent.verticalCenter
-            height: 4; radius: 2
-            color: Colors.color0
-
-            Rectangle {
-                height: parent.height; radius: parent.radius
-                width: parent.width * (vibrancySlider.sliderPct / 100)
-                color: Colors.color4
-            }
-
-            Rectangle {
-                id: handle
-                width: 12; height: 12; radius: 6
-                color: Colors.foreground
-                border.width: 1; border.color: Colors.color0
-                anchors.verticalCenter: parent.verticalCenter
-                x: parent.width * (vibrancySlider.sliderPct / 100) - width / 2
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                anchors.margins: -8  // generous hit target, track itself is only 4px tall
-                onPositionChanged: (mouse) => {
-                    if (pressed) updateFromX(mouse.x)
-                }
-                onPressed: (mouse) => updateFromX(mouse.x)
-
-                function updateFromX(x) {
-                    const pct = Math.round(Math.max(0, Math.min(1, x / track.width)) * 100)
-                    if (pct !== vibrancySlider.sliderPct) {
-                        vibrancySlider.sliderPct = pct
-                        applyTimer.restart()
-                    }
-                }
-            }
-        }
-    }
-
     GridView {
         id: grid
-        anchors { top: vibrancySlider.bottom; left: parent.left; right: parent.right; bottom: parent.bottom; margins: 14; topMargin: 14 }
+        anchors {
+            top: modeToggle.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+
+            margins: 14
+            topMargin: 14
+        }
         clip: true; model: WallpaperIndex.model; currentIndex: 0
         boundsBehavior: Flickable.StopAtBounds
         cellWidth:  width / root.cols; cellHeight: cellWidth
@@ -248,8 +120,13 @@ Item {
         Keys.onSpacePressed: { root.mode = (root.mode === "dark" ? "light" : "dark"); event.accepted = true }
         Keys.onReturnPressed: {
             if (grid.currentIndex >= 0 && grid.currentIndex < WallpaperIndex.model.count) {
-                Quickshell.execDetached(["bash", root.wallScript, WallpaperIndex.model.get(grid.currentIndex).path, root.mode])
-                root.dismiss()
+              Wallpaper.apply(
+                WallpaperIndex.model.get(
+                  grid.currentIndex
+                ).path,
+                root.mode
+              )
+              root.dismiss()
             }
             event.accepted = true
         }
@@ -319,9 +196,12 @@ Item {
                     anchors.fill: parent; hoverEnabled: true
                     onEntered: grid.currentIndex = wrap.index
                     onClicked: {
-                        grid.currentIndex = wrap.index
-                        Quickshell.execDetached(["bash", root.wallScript, wrap.path, root.mode])
-                        root.dismiss()
+                      grid.currentIndex = wrap.index
+                      Wallpaper.apply(
+                        wrap.path,
+                        root.mode
+                      )
+                      root.dismiss()
                     }
                 }
             }

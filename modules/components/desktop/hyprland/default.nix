@@ -8,6 +8,8 @@
 
         package = self'.packages.hyprland;
       };
+      
+      programs.hyprlock.enable = true;
 
       # Stable path that can point at a new store version after rebuilding.
       environment.etc."xdg/hypr/nixc".source = ./config;

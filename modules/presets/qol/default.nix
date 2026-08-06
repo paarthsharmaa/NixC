@@ -17,9 +17,6 @@
       
       screenshots
       clipboard
-      vscodium
-      kitty
-      tools
     ];
   };
 }

@@ -8,16 +8,31 @@ FocusScope {
     signal dismiss()
 
     readonly property var allApps: [
-        { name: "Firefox",  exec: "firefox"  },
-        { name: "Kitty",    exec: "kitty"    },
-        { name: "Nemo", exec: "nemo" }
+        {
+            name: "LibreWolf",
+            command: ["librewolf"]
+        },
+        {
+            name: "Kitty",
+            command: ["kitty"]
+        },
+        {
+            name: "Dolphin",
+            command: ["dolphin"]
+        },
+        {
+            name: "VSCodium",
+            command: ["codium"]
+        }
     ]
     property var filteredApps: allApps
 
     function launch(idx: int): void {
         const app = filteredApps[idx]
         if (!app) return
-        Quickshell.execDetached(["bash", "-c", app.exec + " &"])
+        Quickshell.execDetached(
+          app.command
+        )
         root.dismiss()
     }
 
