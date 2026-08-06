@@ -1,0 +1,36 @@
+editor = ""
+dir_editor = "nvim"
+
+# Nix controls updates.
+auto_check_update = false
+
+cd_on_quit = false
+default_open_file_preview = true
+show_image_preview = true
+show_panel_footer_info = true
+
+default_directory = "."
+default_sort_type = 4
+case_sensitive_sort = false
+
+theme = "catppuccin-mocha"
+code_previewer = "bat"
+nerdfont = true
+show_select_icons = true
+transparent_background = true
+
+sidebar_width = 18
+sidebar_sections = ["home", "pinned", "disks"]
+
+metadata = true
+enable_md5_checksum = false
+zoxide_support = true
+
+[open_with]
+pdf = "xdg-open"
+png = "xdg-open"
+jpg = "xdg-open"
+jpeg = "xdg-open"
+webp = "xdg-open"
+mp4 = "xdg-open"
+mkv = "xdg-open"

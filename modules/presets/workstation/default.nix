@@ -3,10 +3,12 @@
     imports = with self.nixosModules; [
       desktop
       development
-
+      qol
+      ai
+      iris
       kitty
-      librewolf
       vscodium
+      tools
     ];
 
     fonts.packages = with pkgs; [

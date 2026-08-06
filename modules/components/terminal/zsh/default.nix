@@ -34,27 +34,35 @@
       zsh = inputs.wrappers.wrappers.zsh.wrap {
         inherit pkgs;
 
-        runtimePkgs = with pkgs; [
-          carapace
-          fzf
+        runtimePkgs = [
+          pkgs.carapace
+          pkgs.lsd
+          self'.packages.fd
+          self'.packages.fzf
+          self'.packages.rg
+          self'.packages.zoxide
+          self'.packages.lazygit
+          self'.packages.lazydocker
+          self'.packages.bat
         ];
 
         zshAliases = {
-          ls = "${lib.getExe pkgs.lsd} -l";
-          v = lib.getExe self'.packages.nvim;
-          cat = lib.getExe pkgs.bat;
-          lg = lib.getExe pkgs.lazygit;
-
-          devenv = lib.getExe pkgs.devenv;
+          ls = "lsd -l";
+          lsa = "lsd -la";
+          v = "nvim";
+          cat = "bat";
+          lg = "lazygit";
           carapace = lib.getExe pkgs.carapace;
 
-          man = "man -P \"${lib.getExe pkgs.bat} -p\"";
+          devenv = lib.getExe pkgs.devenv;
+
+          man = "man -P \"bat -p\"";
 
           nsh = "nix-shell -p";
 
           nrs = "sudo nixos-rebuild switch --flake";
 
-          vinix = "nvim .";
+          vinix = "nvim ~/Nixc";
         };
 
         zshrc.content = ''
@@ -106,7 +114,7 @@
           bindkey "^[[3;5~" kill-word
           bindkey "^H" backward-kill-word
 
-          source <(${lib.getExe pkgs.fzf} --zsh)
+          source <(${lib.getExe self'.pkgs.fzf} --zsh)
 
           setopt NO_CASE_GLOB
 

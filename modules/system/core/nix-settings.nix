@@ -6,6 +6,10 @@
 
         trusted-users = [
           "root"
+        ];
+        
+        allowed-users = [
+          "root"
           "paarth"
         ];
 
