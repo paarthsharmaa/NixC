@@ -22,7 +22,7 @@
     );
   in {
     packages.superfile = inputs.wrappers.lib.wrapPackage (
-      {pkgs, ...}: {
+      {...}: {
         inherit pkgs;
 
         package = pkgs.superfile;

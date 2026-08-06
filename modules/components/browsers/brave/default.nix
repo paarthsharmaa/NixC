@@ -13,7 +13,7 @@
 
   perSystem = {pkgs, ...}: {
     packages.brave = inputs.wrappers.lib.wrapPackage (
-      {pkgs, ...}: {
+      {...}: {
         inherit pkgs;
 
         package = pkgs.brave;

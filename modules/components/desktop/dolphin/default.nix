@@ -23,7 +23,7 @@
         # File previews
         pkgs.kdePackages.kdegraphics-thumbnailers
         pkgs.ffmpegthumbnailer
-        pkgs.poppler_utils
+        pkgs.poppler-utils
       ];
 
       # Required for mounting and inspecting removable storage.
@@ -37,7 +37,7 @@
 
   perSystem = {pkgs, ...}: {
     packages.dolphin = inputs.wrappers.lib.wrapPackage (
-      {pkgs, ...}: {
+      {...}: {
         inherit pkgs;
 
         package = pkgs.kdePackages.dolphin;

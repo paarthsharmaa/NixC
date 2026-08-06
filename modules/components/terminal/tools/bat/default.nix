@@ -13,7 +13,7 @@
 
   perSystem = {pkgs, ...}: {
     packages.bat = inputs.wrappers.lib.wrapPackage (
-      {pkgs, ...}: {
+      {...}: {
         inherit pkgs;
 
         package = pkgs.bat;

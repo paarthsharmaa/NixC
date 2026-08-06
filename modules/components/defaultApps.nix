@@ -1,10 +1,7 @@
 {moduleWithSystem, ...}: {
   flake.nixosModules.defaultApps = moduleWithSystem (
-    {
-      self',
-      lib,
-      ...
-    }: {...}: {
+    {self', ...}:
+    {lib, ...}: {
       environment.sessionVariables = {
         BROWSER = lib.getExe self'.packages.librewolf;
       };

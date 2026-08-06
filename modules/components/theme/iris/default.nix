@@ -16,7 +16,7 @@
   perSystem = {pkgs, ...}: let
     swayncTemplate =
       pkgs.runCommand "iris-swaync-template.css" {} ''
-        cp \
+        install -m 0644 \
           ${pkgs.swaynotificationcenter}/etc/xdg/swaync/style.css \
           "$out"
 
