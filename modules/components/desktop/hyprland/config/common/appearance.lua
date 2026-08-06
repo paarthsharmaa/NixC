@@ -47,8 +47,5 @@ hl.config({
     misc = {
         disable_hyprland_logo = true,
         force_default_wallpaper = 0,
-
-        -- Avoid continuously rendering unchanged frames.
-        vfr = true,
     },
 })

@@ -22,10 +22,6 @@ hl.monitor({
 -- Yoga laptop efficiency adjustments.
 
 hl.config({
-    misc = {
-        vfr = true,
-    },
-
     decoration = {
         blur = {
             enabled = true,
