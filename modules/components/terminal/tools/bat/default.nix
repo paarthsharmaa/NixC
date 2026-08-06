@@ -1,16 +1,30 @@
-{...}: {
-  flake.nixosModules.bat = {...}: {
-    programs.bat = {
-      enable = true;
+{
+  inputs,
+  moduleWithSystem,
+  ...
+}: {
+  flake.nixosModules.bat = moduleWithSystem (
+    {self', ...}: {...}: {
+      environment.systemPackages = [
+        self'.packages.bat
+      ];
+    }
+  );
 
-      settings = {
-        # No line numbers, grid, header or other decorations.
-        # Syntax highlighting remains enabled.
-        style = "plain";
+  perSystem = {pkgs, ...}: {
+    packages.bat = inputs.wrappers.lib.wrapPackage (
+      {pkgs, ...}: {
+        inherit pkgs;
 
-        # Behave like cat unless explicitly piped into a pager.
-        paging = "never";
-      };
-    };
+        package = pkgs.bat;
+
+        flags = {
+          "--style" = "plain";
+          "--paging" = "never";
+        };
+
+        flagSeparator = "=";
+      }
+    );
   };
 }

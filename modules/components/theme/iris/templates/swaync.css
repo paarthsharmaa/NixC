@@ -1,0 +1,46 @@
+:root {
+  --cc-bg: rgba({bg.rgb}, 0.96);
+
+  --noti-border-color: rgba({fg.rgb}, 0.14);
+  --noti-bg: {surface.rgb};
+  --noti-bg-alpha: 0.94;
+  --noti-bg-darker: {bg};
+  --noti-bg-hover: {color8};
+  --noti-bg-focus: rgba({accent.rgb}, 0.22);
+
+  --noti-close-bg: {surface};
+  --noti-close-bg-hover: {red};
+
+  --text-color: {fg};
+  --text-color-disabled: {dim};
+
+  --bg-selected: {accent};
+
+  --border-radius: 14px;
+}
+
+.control-center {
+  background: var(--cc-bg);
+  color: var(--text-color);
+  border-radius: var(--border-radius);
+}
+
+.notification {
+  background: rgba(var(--noti-bg), var(--noti-bg-alpha));
+  color: var(--text-color);
+  border: 1px solid var(--noti-border-color);
+  border-radius: var(--border-radius);
+}
+
+.notification-row:focus {
+  background: var(--noti-bg-focus);
+}
+
+.close-button {
+  background: var(--noti-close-bg);
+  color: var(--text-color);
+}
+
+.close-button:hover {
+  background: var(--noti-close-bg-hover);
+}

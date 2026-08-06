@@ -6,6 +6,10 @@
       dolphin
       superfile
       fuzzel
+      
+      iris
+      swaync
+      awww
 
       brave
       librewolf
@@ -13,6 +17,9 @@
       
       screenshots
       clipboard
+      vscodium
+      kitty
+      tools
     ];
   };
 }

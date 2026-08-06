@@ -1,29 +1,31 @@
-{moduleWithSystem, ...}: {
+{
+  moduleWithSystem,
+  ...
+}: {
   flake.nixosModules.quickshell = moduleWithSystem (
     {self', ...}: {lib, ...}: {
-      # Install your config as a named XDG Quickshell configuration.
-      environment.etc."xdg/quickshell/nixc".source = ./config;
+      # Contents become:
+      # /etc/xdg/quickshell/shell.qml
+      # /etc/xdg/quickshell/Pill.qml
+      # /etc/xdg/quickshell/panels/...
+      # /etc/xdg/quickshell/services/...
+      environment.etc."xdg/quickshell".source =
+        ./config;
 
       environment.systemPackages = [
         self'.packages.quickshell
       ];
 
-      # UWSM activates graphical-session.target after the Wayland
-      # environment is ready.
-      systemd.user.services.nixc-quickshell = {
-        description = "Paarth's Quickshell";
+      environment.sessionVariables = {
+        WALLPAPER_DIR = "$HOME/Pictures/Wallpapers";
+      };
 
-        wantedBy = [
-          "graphical-session.target"
-        ];
+      systemd.user.services.quickshell = {
+        description = "Quickshell desktop shell";
 
-        partOf = [
-          "graphical-session.target"
-        ];
-
-        after = [
-          "graphical-session.target"
-        ];
+        wantedBy = ["graphical-session.target"];
+        partOf = ["graphical-session.target"];
+        after = ["graphical-session.target"];
 
         serviceConfig = {
           ExecStart =
@@ -36,24 +38,7 @@
     }
   );
 
-  perSystem = {
-    pkgs,
-    lib,
-    ...
-  }: {
-    packages.quickshell = pkgs.writeShellApplication {
-      name = "nixc-qs";
-
-      text = ''
-        exec ${lib.getExe pkgs.quickshell} \
-          --config nixc \
-          "$@"
-      '';
-
-      derivationArgs.meta = {
-        mainProgram = "nixc-qs";
-        description = "Paarth's Quickshell configuration";
-      };
-    };
+  perSystem = {pkgs, ...}: {
+    packages.quickshell = pkgs.quickshell;
   };
 }

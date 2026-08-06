@@ -62,7 +62,7 @@
 
           nrs = "sudo nixos-rebuild switch --flake";
 
-          vinix = "nvim ~/Nixc";
+          vinix = "nvim ~/NixC";
         };
 
         zshrc.content = ''
@@ -114,7 +114,7 @@
           bindkey "^[[3;5~" kill-word
           bindkey "^H" backward-kill-word
 
-          source <(${lib.getExe self'.pkgs.fzf} --zsh)
+          source <(${lib.getExe self'.packages.fzf} --zsh)
 
           setopt NO_CASE_GLOB
 
