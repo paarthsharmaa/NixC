@@ -399,7 +399,6 @@ FocusScope {
                 }
 
                 // Placeholder 4th tile (spacer) (swaync)
-                Item { width: (parent.width - 30) / 4; height: 70 }
                 Rectangle {
                     width: (parent.width - 30) / 4
                     height: 84
@@ -602,50 +601,141 @@ FocusScope {
                 }
             }
 
-            // ── Quick tiles row 3: Files | Sysinfo ────────────────────────────
+            // ── Quick tiles row 3: Files | Sysinfo ─────────────────────
             Row {
-                width: parent.width; spacing: 12
+                width: parent.width
+                spacing: 12
 
                 Rectangle {
-                    width: (parent.width - 30) / 4; height: 84; radius: 18; color: Colors.color0
+                    width: (parent.width - 30) / 4
+                    height: 84
+                    radius: 18
+                    color: Colors.color0
+
                     scale: filesMa.containsMouse ? 0.93 : 1.0
-                    Behavior on scale { SpringAnimation { spring: 8; damping: 0.8 } }
-                    Column {
-                        anchors.centerIn: parent; spacing: 6
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "󰝰"; color: Colors.color8; font.pixelSize: 24; font.family: "JetBrainsMono Nerd Font" }
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "Files"; color: Colors.color8; font.pixelSize: 17; font.family: "JetBrainsMono Nerd Font" }
-                    }
-                    MouseArea { id: filesMa; anchors.fill: parent; hoverEnabled: true
-                        Quickshell.execDetached([
-                          "dolphin"
-                        ])  
+
+                    Behavior on scale {
+                        SpringAnimation {
+                            spring: 8
+                            damping: 0.8
+                        }
                     }
 
-                // Sysinfo shortcut
+                    Column {
+                        anchors.centerIn: parent
+                        spacing: 6
+
+                        Text {
+                            anchors.horizontalCenter:
+                                parent.horizontalCenter
+
+                            text: "󰝰"
+                            color: Colors.color8
+                            font.pixelSize: 24
+                            font.family:
+                                "JetBrainsMono Nerd Font"
+                        }
+
+                        Text {
+                            anchors.horizontalCenter:
+                                parent.horizontalCenter
+
+                            text: "Files"
+                            color: Colors.color8
+                            font.pixelSize: 17
+                            font.family:
+                                "JetBrainsMono Nerd Font"
+                        }
+                    }
+
+                    MouseArea {
+                        id: filesMa
+
+                        anchors.fill: parent
+                        hoverEnabled: true
+
+                        onClicked: {
+                            Quickshell.execDetached([
+                                "dolphin"
+                            ])
+
+                            root.dismiss()
+                        }
+                    }
+                }
+
                 Rectangle {
-                    width: (parent.width - 30) / 4; height: 84; radius: 18; color: Colors.color0
+                    width: (parent.width - 30) / 4
+                    height: 84
+                    radius: 18
+                    color: Colors.color0
+
                     scale: sysMa.containsMouse ? 0.93 : 1.0
-                    Behavior on scale { SpringAnimation { spring: 8; damping: 0.8 } }
+
+                    Behavior on scale {
+                        SpringAnimation {
+                            spring: 8
+                            damping: 0.8
+                        }
+                    }
+
                     Column {
-                        anchors.centerIn: parent; spacing: 6
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "󰘚"; color: Colors.color8; font.pixelSize: 24; font.family: "JetBrainsMono Nerd Font" }
-                        Text { anchors.horizontalCenter: parent.horizontalCenter; text: "Stats"; color: Colors.color8; font.pixelSize: 17; font.family: "JetBrainsMono Nerd Font" }
-                    }
-                    MouseArea { id: sysMa; anchors.fill: parent; hoverEnabled: true
-                        Quickshell.execDetached([
-                            "qs",
-                            "ipc",
-                            "call",
-                            "island",
-                            "sysinfo"
-                        ])  
+                        anchors.centerIn: parent
+                        spacing: 6
+
+                        Text {
+                            anchors.horizontalCenter:
+                                parent.horizontalCenter
+
+                            text: "󰘚"
+                            color: Colors.color8
+                            font.pixelSize: 24
+                            font.family:
+                                "JetBrainsMono Nerd Font"
+                        }
+
+                        Text {
+                            anchors.horizontalCenter:
+                                parent.horizontalCenter
+
+                            text: "Stats"
+                            color: Colors.color8
+                            font.pixelSize: 17
+                            font.family:
+                                "JetBrainsMono Nerd Font"
+                        }
                     }
 
-                // Spacers (fill grid after Do Not Disturb removal)
-                Item { width: (parent.width - 30) / 4; height: 84 }
-                Item { width: (parent.width - 30) / 4; height: 84 }
+                    MouseArea {
+                        id: sysMa
+
+                        anchors.fill: parent
+                        hoverEnabled: true
+
+                        onClicked: {
+                            Quickshell.execDetached([
+                                "qs",
+                                "ipc",
+                                "call",
+                                "island",
+                                "sysinfo"
+                            ])
+
+                            root.dismiss()
+                        }
+                    }
+                }
+
+                Item {
+                    width: (parent.width - 30) / 4
+                    height: 84
+                }
+
+                Item {
+                    width: (parent.width - 30) / 4
+                    height: 84
+                }
             }
-
 
             Item { width: 1; height: 8 }
         }

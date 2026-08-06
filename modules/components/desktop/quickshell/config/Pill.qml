@@ -56,7 +56,7 @@ PanelWindow {
         "wallpaper":      { w: 680, h: 590, r: 28 },
         "media":          { w: 480, h: 280, r: 28 },
         "powerprofile":   { w: 540, h: 460, r: 28 },
-        "visualizer":     { w: 520, h: 220, r: 28 },
+        "visualizer":     { w: 520, h: 220, r: 28 }
     })
 
     readonly property string effectiveState:
@@ -119,13 +119,13 @@ PanelWindow {
     Rectangle {
         id: pillShadow
         anchors.top:              parent.top
-        anchors.topMargin:        (root.panel === "lockscreen" ? 0 : 12) + 4
+        anchors.topMargin: 16
         anchors.horizontalCenter: parent.horizontalCenter
         width:  pill.width
         height: pill.height
         radius: pill.radius
+        opacity: pill.opacity * 0.32
         color:  "#000000"
-        opacity: root.panel === "lockscreen" ? 0.0 : pill.opacity * 0.32
     }
 
     Rectangle {
@@ -314,13 +314,6 @@ PanelWindow {
             sourceComponent: VisualizerContent { onDismiss: root.dismiss() }
         }
 
-        // ── Lockscreen ────────────────────────────────────────────────────
-        Loader {
-            anchors.fill: parent; active: root.panel === "lockscreen"
-            opacity: active ? 1.0 : 0.0
-            Behavior on opacity { NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
-            sourceComponent: LockscreenContent { onDismiss: root.dismiss() }
-        }
     }
 
     Region { id: pillMask; item: pill }

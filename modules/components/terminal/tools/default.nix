@@ -3,14 +3,15 @@
     imports = with self.nixosModules; [
       bat
       btop
-      tmux
-      herdr
+      eza
       fd
       fzf
-      rg
-      zoxide
-      lazygit
+      herdr
       lazydocker
+      lazygit
+      rg
+      tmux
+      zoxide
     ];
   };
 }

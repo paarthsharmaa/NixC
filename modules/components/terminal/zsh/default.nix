@@ -36,19 +36,20 @@
 
         runtimePkgs = [
           pkgs.carapace
-          pkgs.lsd
+          self'.packages.bat
+          self'.packages.eza
           self'.packages.fd
           self'.packages.fzf
+          self'.packages.lazydocker
+          self'.packages.lazygit
           self'.packages.rg
           self'.packages.zoxide
-          self'.packages.lazygit
-          self'.packages.lazydocker
-          self'.packages.bat
         ];
 
         zshAliases = {
-          ls = "lsd -l";
-          lsa = "lsd -la";
+          ls = "eza --long --icons=auto --group-directories-first";
+          lsa = "eza --long --all --icons=auto --group-directories-first";
+          lt = "eza --tree --level=2 --icons=auto --group-directories-first";
           v = "nvim";
           cat = "bat";
           lg = "lazygit";
