@@ -66,6 +66,41 @@
           "swaync.service"
         ];
 
+        path = [
+          # Shell + normal Unix utilities used by QML.
+          pkgs.bash
+          pkgs.coreutils
+          pkgs.findutils
+          pkgs.gawk
+          pkgs.gnugrep
+          pkgs.gnused
+          pkgs.procps
+          pkgs.iproute2
+
+          # Hardware / desktop controls.
+          pkgs.pamixer
+          pkgs.brightnessctl
+          pkgs.playerctl
+          pkgs.networkmanager
+          pkgs.power-profiles-daemon
+          pkgs.hyprsunset
+
+          # Shell Island extras.
+          pkgs.cava
+          pkgs.perl
+          pkgs.imagemagick
+
+          # Commands called from panels.
+          pkgs.systemd
+          pkgs.glib
+
+          # Your configured packages called from QML.
+          self'.packages.awww
+          self'.packages.iris
+          self'.packages.swaync
+          self'.packages.kitty
+        ];
+
         serviceConfig = {
           ExecStart =
             lib.getExe self'.packages.quickshell;
