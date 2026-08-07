@@ -28,13 +28,28 @@ FocusScope {
     property var filteredApps: allApps
 
     function launch(idx: int): void {
-        const app = filteredApps[idx]
-        if (!app) return
+        const app =
+            filteredApps[idx]
+
+        if (!app)
+            return
+
+        const command = [
+            "uwsm",
+            "app",
+            "--"
+        ]
+
+        for (const argument of app.command)
+            command.push(argument)
+
         Quickshell.execDetached(
-          app.command
+            command
         )
+
         root.dismiss()
     }
+
 
     focus: true
     Component.onCompleted: search.forceActiveFocus()

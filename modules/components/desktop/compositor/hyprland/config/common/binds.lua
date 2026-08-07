@@ -150,12 +150,22 @@ hl.bind(
     { mouse = true }
 )
 
--- Quickshell-backed hardware keys.
--- These update the value and display Shell Island's OSD.
+-- Hardware controls.
+--
+-- Hyprland performs the real system action directly.
+-- Quickshell IPC is best-effort and only displays UI.
+--
+-- This means volume, brightness and media controls
+-- continue working even when Quickshell is not running.
 
 hl.bind(
     "XF86AudioRaiseVolume",
-    exec("qs ipc call island volUp"),
+    exec(
+        "wpctl set-volume -l 1.0 "
+        .. "@DEFAULT_AUDIO_SINK@ 5%+; "
+        .. "qs ipc call island volumeOsd "
+        .. ">/dev/null 2>&1 || true"
+    ),
     {
         locked = true,
         repeating = true,
@@ -164,59 +174,29 @@ hl.bind(
 
 hl.bind(
     "XF86AudioLowerVolume",
-    exec("qs ipc call island volDown"),
+    exec(
+        "wpctl set-volume "
+        .. "@DEFAULT_AUDIO_SINK@ 5%-; "
+        .. "qs ipc call island volumeOsd "
+        .. ">/dev/null 2>&1 || true"
+    ),
     {
         locked = true,
         repeating = true,
     }
 )
-
-hl.bind(
-    "XF86MonBrightnessUp",
-    exec("qs ipc call island briUp"),
-    {
-        locked = true,
-        repeating = true,
-    }
-)
-
-hl.bind(
-    "XF86MonBrightnessDown",
-    exec("qs ipc call island briDown"),
-    {
-        locked = true,
-        repeating = true,
-    }
-)
-
-hl.bind(
-    "XF86AudioPlay",
-    exec("qs ipc call island mediaToggle"),
-    { locked = true }
-)
-
-hl.bind(
-    "XF86AudioNext",
-    exec("qs ipc call island mediaNext"),
-    { locked = true }
-)
-
-hl.bind(
-    "XF86AudioPrev",
-    exec("qs ipc call island mediaPrev"),
-    { locked = true }
-)
-
--- Mute currently remains direct because Shell Island
--- does not yet expose volMute or micMute IPC handlers.
 
 hl.bind(
     "XF86AudioMute",
     exec(
         "wpctl set-mute "
-        .. "@DEFAULT_AUDIO_SINK@ toggle"
+        .. "@DEFAULT_AUDIO_SINK@ toggle; "
+        .. "qs ipc call island volumeOsd "
+        .. ">/dev/null 2>&1 || true"
     ),
-    { locked = true }
+    {
+        locked = true,
+    }
 )
 
 hl.bind(
@@ -225,5 +205,57 @@ hl.bind(
         "wpctl set-mute "
         .. "@DEFAULT_AUDIO_SOURCE@ toggle"
     ),
-    { locked = true }
+    {
+        locked = true,
+    }
+)
+
+hl.bind(
+    "XF86MonBrightnessUp",
+    exec(
+        "brightnessctl set +5%; "
+        .. "qs ipc call island brightnessOsd "
+        .. ">/dev/null 2>&1 || true"
+    ),
+    {
+        locked = true,
+        repeating = true,
+    }
+)
+
+hl.bind(
+    "XF86MonBrightnessDown",
+    exec(
+        "brightnessctl set 5%-; "
+        .. "qs ipc call island brightnessOsd "
+        .. ">/dev/null 2>&1 || true"
+    ),
+    {
+        locked = true,
+        repeating = true,
+    }
+)
+
+hl.bind(
+    "XF86AudioPlay",
+    exec("playerctl play-pause"),
+    {
+        locked = true,
+    }
+)
+
+hl.bind(
+    "XF86AudioNext",
+    exec("playerctl next"),
+    {
+        locked = true,
+    }
+)
+
+hl.bind(
+    "XF86AudioPrev",
+    exec("playerctl previous"),
+    {
+        locked = true,
+    }
 )

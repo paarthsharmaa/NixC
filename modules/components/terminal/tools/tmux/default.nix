@@ -21,7 +21,7 @@
       inherit pkgs;
 
       # C-b is also commonly used by Herdr.
-      prefix = "C-a";
+      prefix = "C-Space";
 
       shell = lib.getExe self'.packages.zsh;
 

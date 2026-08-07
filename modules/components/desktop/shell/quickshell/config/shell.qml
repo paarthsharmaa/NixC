@@ -96,15 +96,16 @@ ShellRoot {
         function powerprofile():   void { root.toggle("powerprofile")   }
         function visualizer():     void { root.toggle("visualizer")     }
         function close():          void { root.panel = ""               }
+      
+        function volumeOsd(): void {
+            Audio.refresh()
+            root.showOsd("volume")
+        }
 
-        function volUp():   void { Audio.setVolume(Audio.volume + 5);     root.showOsd("volume")     }
-        function volDown(): void { Audio.setVolume(Audio.volume - 5);     root.showOsd("volume")     }
-        function briUp():   void { Bright.setPercent(Bright.percent + 5); root.showOsd("brightness") }
-        function briDown(): void { Bright.setPercent(Bright.percent - 5); root.showOsd("brightness") }
-
-        function mediaToggle(): void { Media.toggle() }
-        function mediaNext():   void { Media.next()   }
-        function mediaPrev():   void { Media.prev()   }
+        function brightnessOsd(): void {
+            Bright.refresh()
+            root.showOsd("brightness")
+        }
     }
 
     // Single surface again -- see Pill.qml's header comment for why (exact

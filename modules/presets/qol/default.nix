@@ -1,22 +1,17 @@
 {self, ...}: {
   flake.nixosModules.qol = {
     imports = with self.nixosModules; [
+      iris
       qtTheme
 
       dolphin
       superfile
       fuzzel
       
-      iris
-      swaync
-      awww
 
       brave
       librewolf
       defaultApps
-      
-      screenshots
-      clipboard
     ];
   };
 }

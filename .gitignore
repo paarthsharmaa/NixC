@@ -1,8 +1,7 @@
 result
 result-*
 .direnv
-modules/components/desktop/quickshell/config/.qmlls.ini
+**/.qmlls.ini
 .session
 
-modules/components/desktop/quickshell/config/shell-island-main.zip
 *.bak

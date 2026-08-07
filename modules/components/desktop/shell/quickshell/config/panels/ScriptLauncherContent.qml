@@ -9,7 +9,10 @@ FocusScope {
     signal dismiss()
 
     // Scripts live in the same folder as wallpaper.sh
-    readonly property string scriptDir: Quickshell.env("HOME") + "/scripts"
+    readonly property string scriptDir:
+        Quickshell.shellPath(
+            "scripts"
+        )
 
     ListModel { id: allScripts }
     property var filteredScripts: []

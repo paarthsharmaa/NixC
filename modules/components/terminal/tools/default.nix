@@ -6,7 +6,6 @@
       eza
       fd
       fzf
-      herdr
       lazydocker
       lazygit
       rg

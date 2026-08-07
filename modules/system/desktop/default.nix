@@ -5,11 +5,18 @@
 
       audio
       network
+      power
       nix-ld
 
       sddm
+
       hyprland
       quickshell
+      awww
+      swaync
+      hyprsunset
+      clipboard
+      screenshots
     ];
   };
 }

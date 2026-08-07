@@ -21,10 +21,10 @@ Item {
     readonly property string wallDir:
         Quickshell.env("HOME")
             + "/Pictures/Wallpapers"
-            
+
     readonly property string thumbScript:
         Quickshell.shellPath(
-            "extra/scripts/wallpaper-thumbs.sh"
+            "scripts/wallpaper-thumbs.sh"
         )
 
     readonly property string thumbCache:  Quickshell.env("HOME") + "/.cache/wallpaper-thumbs"

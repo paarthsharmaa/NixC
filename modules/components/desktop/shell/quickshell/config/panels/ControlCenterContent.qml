@@ -81,7 +81,7 @@ FocusScope {
         // to fail silently. Use bare "kitty" so PATH resolves correctly.
         // --app-id (not --class) sets the Wayland app_id that Hyprland's
         // windowrule matches against; --class only sets the X11 WM_CLASS.
-        case "nmtui":   Quickshell.execDetached(["bash", "-c", "kitty --app-id nmtui --class nmtui -e nmtui"]); root.dismiss(); break
+        case "nmtui":   Quickshell.execDetached(["uwsm", "app", "--", "kitty", "--app-id", "nmtui", "-e","nmtui"]); root.dismiss(); break
         case "play":    Media.toggle(); break
         case "prev":    Media.prev(); break
         case "next":    Media.next(); break

@@ -75,8 +75,12 @@
           lt =
             "eza --tree --level=2 --icons=auto --group-directories-first";
 
+          lta = "lt -la";
+
           v = "nvim";
           cat = "bat";
+          cd = "z";
+          btop = "btop --force-utf";
           lg = "lazygit";
 
           man =
@@ -90,6 +94,8 @@
 
           vinix =
             "nvim ~/NixC";
+
+          gcm = "git commit -m";
         };
 
         zshrc.content = ''
