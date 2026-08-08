@@ -12,6 +12,19 @@
             self'.packages.hyprland;
         };
 
+        programs.uwsm.waylandCompositors.hyprland = {
+          prettyName = "Hyprland";
+
+          comment =
+            "Hyprland compositor managed by UWSM";
+
+          binPath =
+            "/run/current-system/sw/bin/Hyprland";
+        };
+
+        services.displayManager.defaultSession =
+          "hyprland-uwsm";
+
         programs.hyprlock.enable =
           true;
 

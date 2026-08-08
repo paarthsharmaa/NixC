@@ -11,35 +11,41 @@ FocusScope {
         search.text.trim().toLowerCase()
 
     readonly property var filteredApps: {
-        const apps =
-            [...DesktopEntries.applications.values]
+        const q = root.query
 
-        const q =
-            root.query
+        let apps = [
+            ...DesktopEntries.applications.values
+        ]
 
-        const result =
-            q === ""
-                ? apps
-                : apps.filter(app => {
-                    const text = (
-                        (app.name ?? "")
-                        + " "
-                        + (app.genericName ?? "")
-                        + " "
-                        + (app.comment ?? "")
-                        + " "
-                        + ((app.keywords ?? []).join(" "))
-                    ).toLowerCase()
+        if (q !== "") {
+            apps = apps.filter(app => {
+                const text = (
+                    (app.name ?? "")
+                    + " "
+                    + (app.genericName ?? "")
+                    + " "
+                    + (app.comment ?? "")
+                    + " "
+                    + ((app.keywords ?? []).join(" "))
+                ).toLowerCase()
 
-                    return text.includes(q)
-                })
+                return text.includes(q)
+            })
+        }
 
-        result.sort(
+        apps.sort(
             (a, b) =>
                 a.name.localeCompare(b.name)
         )
 
-        return result.slice(0, 80)
+        return apps.slice(0, 80)
+    }
+
+    ScriptModel {
+        id: appModel
+
+        objectProp: "id"
+        values: root.filteredApps
     }
 
     function launch(idx: int): void {
@@ -107,7 +113,7 @@ FocusScope {
             id: list
             width: parent.width
             height: Math.min(root.filteredApps.length * 58, 230)
-            model: root.filteredApps; currentIndex: 0; clip: true
+            model: appModel
             boundsBehavior: Flickable.StopAtBounds; spacing: 4; interactive: false
 
             delegate: Rectangle {

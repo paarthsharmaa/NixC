@@ -1,15 +1,17 @@
 return {
     terminal =
-        "uwsm app -- kitty",
+        "uwsm app -t service -- kitty",
 
     browser =
-        "uwsm app -- librewolf",
+        "uwsm app -t service -- librewolf",
 
     files =
-        "uwsm app -- dolphin",
+        "uwsm app -t service -- dolphin",
 
     launcher =
-        "qs ipc call island launcher",
+        "qs ipc call island launcher "
+        .. ">/dev/null 2>&1 "
+        .. "|| uwsm app -t service -- fuzzel",
 
     controlCenter =
         "qs ipc call island controlcenter",

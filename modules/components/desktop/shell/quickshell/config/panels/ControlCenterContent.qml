@@ -355,8 +355,11 @@ FocusScope {
                         }
                     }
                     MouseArea {
-                        id: nmtuiMa; anchors.fill: parent; hoverEnabled: true
-                        onClicked: root.launchNmtui(); root.dismiss() }
+                        id: nmtuiMa
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked:
+                            root.launchNmtui()
                     }
                 }
             }

@@ -75,14 +75,13 @@
           ];
 
           serviceConfig = {
-            ExecStart =
-              lib.getExe self'.packages.quickshell;
+            ExecStart = ''
+              ${lib.getExe self'.packages.quickshell} \
+                --path /etc/xdg/quickshell/shell.qml
+            '';
 
-            Restart =
-              "on-failure";
-
-            RestartSec =
-              2;
+            Restart = "on-failure";
+            RestartSec = 2;
           };
         };
       }
