@@ -82,7 +82,8 @@ FocusScope {
                 color: Colors.foreground; font.pixelSize: 17; font.family: "JetBrainsMono Nerd Font"
                 selectionColor: Colors.color8; clip: true
 
-                onTextChanged: root.applyFilter(text.trim())
+                onTextChanged:
+                    list.currentIndex = 0
                 Keys.onEscapePressed: { root.dismiss(); event.accepted = true }
                 Keys.onReturnPressed: { root.runScript(list.currentIndex); event.accepted = true }
                 Keys.onDownPressed:   { list.incrementCurrentIndex(); event.accepted = true }

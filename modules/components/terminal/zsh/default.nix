@@ -115,7 +115,7 @@
             'l:|=* r:|=*'
 
           source <(${lib.getExe pkgs.carapace} _carapace)
-
+          
           autoload -Uz select-word-style
           select-word-style bash
 

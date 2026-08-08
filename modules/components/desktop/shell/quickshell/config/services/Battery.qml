@@ -10,13 +10,14 @@ Item {
         QsPower.UPower.displayDevice
 
     readonly property bool present:
-        root.battery.ready
+        root.battery
+        && root.battery.ready
         && root.battery.isPresent
 
     readonly property int percent:
-        root.battery.ready
+        root.battery && root.battery.ready
             ? Math.round(
-                root.battery.percentage
+                root.battery.percentage * 100
               )
             : 0
 

@@ -13,19 +13,18 @@ FocusScope {
     // values are shown together, so it's the single place that turns their
     // polling on. Media has its own gate in MediaContent since it isn't
     // shown here.
+
     Component.onCompleted: {
-        Audio.live        = true
-        Bright.live       = true
-        Network.live      = true
-        PowerProfile.live = true
+        Bright.refresh()
+        Network.live = true
+
         forceActiveFocus()
     }
+
     Component.onDestruction: {
-        Audio.live        = false
-        Bright.live       = false
-        Network.live      = false
-        PowerProfile.live = false
+        Network.live = false
     }
+
     Keys.onEscapePressed: function(ev) { root.dismiss(); ev.accepted = true }
 
     // ── Keyboard navigation ─────────────────────────────────────────────────
@@ -47,6 +46,31 @@ FocusScope {
     ]
     readonly property var navFlat: navRows.reduce((a, r) => a.concat(r), [])
     readonly property string navCurrent: navFlat[Math.max(0, Math.min(navFlat.length - 1, root.navIndex))]
+
+    function launchNmtui(): void {
+        const kitty =
+            DesktopEntries.heuristicLookup(
+                "kitty"
+            )
+
+        if (!kitty)
+            return
+
+        Quickshell.execDetached([
+            "uwsm",
+            "app",
+            "-t",
+            "service",
+            "--",
+            kitty.id,
+            "--app-id",
+            "nmtui",
+            "-e",
+            "nmtui"
+        ])
+
+        root.dismiss()
+    }
 
     function navRowOf(key: string): int {
         for (let r = 0; r < navRows.length; r++) if (navRows[r].indexOf(key) !== -1) return r
@@ -81,7 +105,7 @@ FocusScope {
         // to fail silently. Use bare "kitty" so PATH resolves correctly.
         // --app-id (not --class) sets the Wayland app_id that Hyprland's
         // windowrule matches against; --class only sets the X11 WM_CLASS.
-        case "nmtui":   Quickshell.execDetached(["uwsm", "app", "--", "kitty", "--app-id", "nmtui", "-e","nmtui"]); root.dismiss(); break
+        case "nmtui":   root.launchNmtui(); break
         case "play":    Media.toggle(); break
         case "prev":    Media.prev(); break
         case "next":    Media.next(); break
@@ -332,7 +356,7 @@ FocusScope {
                     }
                     MouseArea {
                         id: nmtuiMa; anchors.fill: parent; hoverEnabled: true
-                        onClicked: { Quickshell.execDetached(["bash", "-c", "kitty --app-id nmtui --class nmtui -e nmtui"]); root.dismiss() }
+                        onClicked: root.launchNmtui(); root.dismiss() }
                     }
                 }
             }

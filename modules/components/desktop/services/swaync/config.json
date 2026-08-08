@@ -1,24 +1,42 @@
 {
+  "ignore-gtk-theme": true,
+
   "positionX": "right",
   "positionY": "top",
 
   "layer": "overlay",
-  "control-center-layer": "top",
+  "control-center-layer": "overlay",
+
   "layer-shell": true,
+  "layer-shell-cover-screen": false,
+
+  "control-center-exclusive-zone": false,
+
+  "fit-to-screen": false,
+
+  "control-center-margin-top": 72,
+  "control-center-margin-right": 12,
+  "control-center-margin-bottom": 12,
+  "control-center-margin-left": 12,
+
+  "notification-window-width": 420,
+
+  "control-center-width": 430,
+  "control-center-height": 650,
 
   "timeout": 8,
   "timeout-low": 4,
   "timeout-critical": 0,
+
+  "transition-time": 160,
+
+  "keyboard-shortcuts": true,
 
   "notification-grouping": true,
   "notification-inline-replies": true,
   "notification-2fa-action": true,
 
   "image-visibility": "when-available",
-
-  "notification-window-width": 420,
-  "control-center-width": 430,
-  "control-center-height": 650,
 
   "widgets": [
     "title",
@@ -35,6 +53,10 @@
 
     "dnd": {
       "text": "Do Not Disturb"
+    },
+
+    "notifications": {
+      "vexpand": true
     }
   }
 }

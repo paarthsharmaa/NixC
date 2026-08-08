@@ -7,13 +7,17 @@ Item {
     id: root
 
     property int percent: 100
-    property bool live: false
 
-    property int _pendingPct: -1
+    property int _pendingPercent: -1
+    property bool _refreshPending: false
 
     function refresh(): void {
-        if (!poll.running)
-            poll.running = true
+        if (poll.running) {
+            root._refreshPending = true
+            return
+        }
+
+        poll.running = true
     }
 
     function setPercent(value: int): void {
@@ -23,15 +27,32 @@ Item {
                 Math.min(100, value)
             )
 
+        // Immediate visual feedback.
         root.percent = clamped
-        root._pendingPct = clamped
+
+        // Collapse rapid slider motion into the latest value.
+        root._pendingPercent = clamped
 
         setTimer.restart()
     }
 
-    onLiveChanged: {
-        if (root.live)
-            root.refresh()
+    function applyPending(): void {
+        if (setProc.running)
+            return
+
+        if (root._pendingPercent < 0)
+            return
+
+        const value =
+            root._pendingPercent
+
+        root._pendingPercent = -1
+
+        setProc.exec([
+            "brightnessctl",
+            "set",
+            String(value) + "%"
+        ])
     }
 
     Component.onCompleted:
@@ -40,21 +61,11 @@ Item {
     Timer {
         id: setTimer
 
-        interval: 50
+        interval: 35
+        repeat: false
 
-        onTriggered: {
-            if (root._pendingPct < 0)
-                return
-
-            setProc.command = [
-                "brightnessctl",
-                "set",
-                String(root._pendingPct) + "%"
-            ]
-
-            root._pendingPct = -1
-            setProc.running = true
-        }
+        onTriggered:
+            root.applyPending()
     }
 
     Process {
@@ -73,11 +84,27 @@ Item {
                 if (parts.length < 5)
                     return
 
+                // brightnessctl -m:
+                //
+                // device,class,current,percentage,max
+                //
+                // parseInt("67%") -> 67
                 const value =
-                    parseInt(parts[4])
+                    parseInt(parts[3])
 
                 if (!isNaN(value))
-                    root.percent = value
+                    root.percent =
+                        Math.max(
+                            0,
+                            Math.min(100, value)
+                        )
+            }
+        }
+
+        onExited: {
+            if (root._refreshPending) {
+                root._refreshPending = false
+                poll.running = true
             }
         }
     }
@@ -85,7 +112,13 @@ Item {
     Process {
         id: setProc
 
-        onExited:
+        onExited: {
+            if (root._pendingPercent >= 0) {
+                setTimer.restart()
+                return
+            }
+
             root.refresh()
+        }
     }
 }

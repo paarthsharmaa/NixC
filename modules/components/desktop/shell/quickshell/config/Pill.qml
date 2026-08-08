@@ -144,9 +144,26 @@ PanelWindow {
         height: root.dim.h
         radius: root.dim.r
 
-        Behavior on width  { SpringAnimation { spring: 5.5; damping: 0.78; mass: 1.0 } }
-        Behavior on height { SpringAnimation { spring: 5.5; damping: 0.78; mass: 1.0 } }
-        Behavior on radius { SpringAnimation { spring: 5.5; damping: 0.78; mass: 1.0 } }
+        Behavior on width {
+            NumberAnimation {
+                duration: 170
+                easing.type: Easing.OutCubic
+            }
+        }
+
+        Behavior on height {
+            NumberAnimation {
+                duration: 170
+                easing.type: Easing.OutCubic
+            }
+        }
+
+        Behavior on radius {
+            NumberAnimation {
+                duration: 170
+                easing.type: Easing.OutCubic
+            }
+        }
 
         readonly property bool isFullscreen:
             Hyprland.focusedWorkspace ? Hyprland.focusedWorkspace.hasFullscreen : false
@@ -325,9 +342,6 @@ PanelWindow {
     // drag, key-driven volume/brightness) already update state optimistically
     // so nothing goes stale while polling is off; this only affects catching
     // *external* changes, which is only worth doing while visible anyway.
-    Binding { target: Bright;       property: "live"; value: root.panel === "controlcenter" || (root.effectiveState === "osd" && root.osdType === "brightness") }
-    Binding { target: Audio;        property: "live"; value: root.panel === "controlcenter" || (root.effectiveState === "osd" && root.osdType === "volume") }
     Binding { target: SysStats;     property: "live"; value: root.panel === "sysinfo" }
-    Binding { target: PowerProfile; property: "live"; value: root.panel === "controlcenter" || root.panel === "powerprofile" }
     Binding { target: Network;      property: "live"; value: root.panel === "controlcenter" }
 }

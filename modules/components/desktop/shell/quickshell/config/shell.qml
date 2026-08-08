@@ -11,13 +11,31 @@ ShellRoot {
     id: root
 
     property bool   osdVisible: false
-    property string osdType:    ""
+    property string osdType: ""
 
-    Timer { id: osdTimer; interval: 2000; onTriggered: root.osdVisible = false }
+    Timer {
+        id: osdTimer
+
+        interval: 1200
+
+        onTriggered:
+            root.osdVisible = false
+    }
+
+    Timer {
+        id: brightnessRefreshTimer
+
+        interval: 35
+        repeat: false
+
+        onTriggered:
+            Bright.refresh()
+    }
 
     function showOsd(type: string): void {
-        root.osdType    = type
+        root.osdType = type
         root.osdVisible = true
+
         osdTimer.restart()
     }
 
@@ -86,25 +104,30 @@ ShellRoot {
 
     IpcHandler {
         target: "island"
-        function launcher():       void { root.toggle("launcher")       }
-        function controlcenter():  void { root.toggle("controlcenter")  }
-        function mixer():          void { root.toggle("controlcenter")  }
-        function sysinfo():        void { root.toggle("sysinfo")        }
-        function power():          void { root.toggle("power")          }
-        function wallpaper():      void { root.toggle("wallpaper")      }
-        function media():          void { root.toggle("media")          }
-        function powerprofile():   void { root.toggle("powerprofile")   }
-        function visualizer():     void { root.toggle("visualizer")     }
-        function close():          void { root.panel = ""               }
-      
+
+        function launcher():      void { root.toggle("launcher")      }
+        function controlcenter(): void { root.toggle("controlcenter") }
+        function mixer():         void { root.toggle("controlcenter") }
+        function sysinfo():       void { root.toggle("sysinfo")       }
+        function power():         void { root.toggle("power")         }
+        function wallpaper():     void { root.toggle("wallpaper")     }
+        function media():         void { root.toggle("media")         }
+        function powerprofile():  void { root.toggle("powerprofile")  }
+        function visualizer():    void { root.toggle("visualizer")    }
+
+        function close(): void {
+            root.panel = ""
+        }
+
         function volumeOsd(): void {
-            Audio.refresh()
+            // PipeWire updates Audio reactively.
             root.showOsd("volume")
         }
 
         function brightnessOsd(): void {
-            Bright.refresh()
+            // Show immediately, then read the completed hardware value.
             root.showOsd("brightness")
+            brightnessRefreshTimer.restart()
         }
     }
 

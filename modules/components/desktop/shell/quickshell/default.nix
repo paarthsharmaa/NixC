@@ -72,7 +72,6 @@
             self'.packages.awww
             self'.packages.iris
             self'.packages.swaync
-            self'.packages.kitty
           ];
 
           serviceConfig = {

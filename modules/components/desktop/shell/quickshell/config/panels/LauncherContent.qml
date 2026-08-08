@@ -7,49 +7,64 @@ FocusScope {
     id: root
     signal dismiss()
 
-    readonly property var allApps: [
-        {
-            name: "LibreWolf",
-            command: ["librewolf"]
-        },
-        {
-            name: "Kitty",
-            command: ["kitty"]
-        },
-        {
-            name: "Dolphin",
-            command: ["dolphin"]
-        },
-        {
-            name: "VSCodium",
-            command: ["codium"]
-        }
-    ]
-    property var filteredApps: allApps
+    readonly property string query:
+        search.text.trim().toLowerCase()
+
+    readonly property var filteredApps: {
+        const apps =
+            [...DesktopEntries.applications.values]
+
+        const q =
+            root.query
+
+        const result =
+            q === ""
+                ? apps
+                : apps.filter(app => {
+                    const text = (
+                        (app.name ?? "")
+                        + " "
+                        + (app.genericName ?? "")
+                        + " "
+                        + (app.comment ?? "")
+                        + " "
+                        + ((app.keywords ?? []).join(" "))
+                    ).toLowerCase()
+
+                    return text.includes(q)
+                })
+
+        result.sort(
+            (a, b) =>
+                a.name.localeCompare(b.name)
+        )
+
+        return result.slice(0, 80)
+    }
 
     function launch(idx: int): void {
         const app =
-            filteredApps[idx]
+            root.filteredApps[idx]
 
         if (!app)
             return
 
-        const command = [
+        Quickshell.execDetached([
             "uwsm",
             "app",
-            "--"
-        ]
 
-        for (const argument of app.command)
-            command.push(argument)
+            // Important:
+            // launch from systemd's current session environment,
+            // not Quickshell's restricted service PATH.
+            "-t",
+            "service",
 
-        Quickshell.execDetached(
-            command
-        )
+            "--",
+            app.id
+        ])
 
         root.dismiss()
     }
-
 
     focus: true
     Component.onCompleted: search.forceActiveFocus()

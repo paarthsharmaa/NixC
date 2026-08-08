@@ -29,23 +29,19 @@
             "graphical-session.target"
           ];
 
-          unitConfig = {
-            ConditionEnvironment =
-              "WAYLAND_DISPLAY";
-          };
+          unitConfig.ConditionEnvironment = [
+            "WAYLAND_DISPLAY"
+            "HYPRLAND_INSTANCE_SIGNATURE"
+          ];
 
           serviceConfig = {
             ExecStart =
               "${lib.getExe pkgs.hyprsunset} --identity";
 
-            Slice =
-              "session.slice";
+            Slice = "session.slice";
 
-            Restart =
-              "on-failure";
-
-            RestartSec =
-              2;
+            Restart = "on-failure";
+            RestartSec = 2;
           };
         };
       }
