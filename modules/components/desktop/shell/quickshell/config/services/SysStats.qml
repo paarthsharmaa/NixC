@@ -109,9 +109,22 @@ Item {
         command: ["bash", "-c", "uptime -p | sed 's/up //'"]
         stdout: SplitParser { onRead: d => { root.uptime = d.trim() } } }
 
-    Component.onCompleted: { hostPoll.running = true; kernelPoll.running = true }
-    Process { id: hostPoll; command: ["hostname"]
-        stdout: SplitParser { onRead: d => { root.hostname = d.trim() } } }
-    Process { id: kernelPoll; command: ["bash", "-c", "uname -r"]
-        stdout: SplitParser { onRead: d => { root.kernel = d.trim() } } }
+    Component.onCompleted: {
+        kernelPoll.running = true
+    }
+
+    Process {
+        id: kernelPoll
+
+        command: [
+            "uname",
+            "-r"
+        ]
+
+        stdout: SplitParser {
+            onRead: data => {
+                root.kernel = data.trim()
+            }
+        }
+    }
 }

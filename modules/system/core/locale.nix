@@ -2,7 +2,7 @@
   flake.nixosModules.locale = {...}: {
     time.timeZone = "Asia/Kolkata";
     i18n = {
-      defaultLocale = "en_IN";
+      defaultLocale = "en_US.UTF-8";
       extraLocaleSettings = {
         LC_ADDRESS = "en_IN";
         LC_IDENTIFICATION = "en_IN";
@@ -15,6 +15,11 @@
         LC_TIME = "en_IN";
       };
     };
+
+    environment.sessionVariables = {
+      TZ = "Asia/Kolkata";
+    };
+
     services.xserver.xkb = {
       layout = "us";
       variant = "";
