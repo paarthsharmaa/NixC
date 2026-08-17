@@ -5,7 +5,7 @@
       qtTheme
 
       dolphin
-      superfile
+      yazi
       fuzzel
       
 

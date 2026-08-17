@@ -17,8 +17,9 @@
         pkgs.p7zip
         pkgs.unzip
 
-        # Network protocols and richer KIO support
+        # KIO protocol support
         pkgs.kdePackages.kio-extras
+        pkgs.kdePackages.kio-fuse
 
         # File previews
         pkgs.kdePackages.kdegraphics-thumbnailers
@@ -26,8 +27,20 @@
         pkgs.poppler-utils
       ];
 
-      # Required for mounting and inspecting removable storage.
+      # USB/removable-storage management
       services.udisks2.enable = true;
+
+      # Required by kio-fuse / non-local KIO URLs
+      programs.fuse.enable = true;
+
+      # Android phones, cameras, media players, etc.
+      services.udev.packages = [
+        pkgs.libmtp.out
+        pkgs.media-player-info
+      ];
+
+      # iPhone / iPad USB communication
+      services.usbmuxd.enable = true;
 
       xdg.mime.defaultApplications = {
         "inode/directory" = "org.kde.dolphin.desktop";
