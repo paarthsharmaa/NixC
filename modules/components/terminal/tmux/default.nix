@@ -51,13 +51,9 @@
       ];
 
       configAfter = ''
-        set -g focus-events on
-        set -g renumber-windows on
-        set -g set-clipboard on
+        ${builtins.readFile ./config/tmux.conf}
 
-        bind c new-window -c "#{pane_current_path}"
-        bind | split-window -h -c "#{pane_current_path}"
-        bind - split-window -v -c "#{pane_current_path}"
+        bind -N "Reload configuration" q source-file ${./config/tmux.conf} \; display "Configuration reloaded"
       '';
     };
   };

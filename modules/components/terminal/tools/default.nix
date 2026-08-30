@@ -9,7 +9,6 @@
       lazydocker
       lazygit
       rg
-      tmux
       zoxide
     ];
   };

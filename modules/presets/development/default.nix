@@ -4,6 +4,8 @@
       git
       nvim
       zsh
+      jj
+      tmux
     ];
 
     environment.systemPackages = with pkgs; [
