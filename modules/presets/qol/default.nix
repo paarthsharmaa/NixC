@@ -5,10 +5,8 @@
       qtTheme
 
       dolphin
-      yazi
       fuzzel
       
-
       brave
       librewolf
       defaultApps

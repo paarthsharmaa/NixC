@@ -18,7 +18,7 @@
       settings = {
         user = {
           name = "paarthsharmaa";
-          email = "paarthsharma0912@gmai.com";
+          email = "paarthsharma0912@gmail.com";
         };
       };
     };

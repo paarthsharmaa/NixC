@@ -2,6 +2,7 @@
   flake.nixosModules.tools = {...}: {
     imports = with self.nixosModules; [
       bat
+      bluetui
       btop
       eza
       fd
@@ -9,6 +10,8 @@
       lazydocker
       lazygit
       rg
+      wlctl
+      yazi
       zoxide
     ];
   };
