@@ -1,5 +1,9 @@
-{...}: {
+{self, ...}: {
   flake.nixosModules.audio = {pkgs, ...}: {
+    imports = with self.nixosModules; [
+      wiremix
+    ];
+
     environment.systemPackages = with pkgs; [
       pavucontrol
       playerctl
