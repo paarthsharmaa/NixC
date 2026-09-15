@@ -1,7 +1,7 @@
 {moduleWithSystem, ...}: {
   flake.nixosModules.hyprland =
     moduleWithSystem (
-      {self', ...}: {...}: {
+      {self', ...}: {lib, pkgs, ...}: {
         programs.hyprland = {
           enable = true;
           withUWSM = true;
@@ -12,15 +12,21 @@
             self'.packages.hyprland;
         };
 
-        programs.uwsm.waylandCompositors.hyprland = {
-          prettyName = "Hyprland";
-
-          comment =
-            "Hyprland compositor managed by UWSM";
-
-          binPath =
-            "/run/current-system/sw/bin/Hyprland";
-        };
+        services.displayManager.sessionPackages = [
+          (pkgs.writeTextFile {
+            name = "hyprland-uwsm-session";
+            destination = "/share/wayland-sessions/hyprland-uwsm.desktop";
+            text = ''
+              [Desktop Entry]
+              Name=Hyprland (UWSM)
+              Comment=Hyprland compositor managed by UWSM
+              Exec=${lib.getExe pkgs.uwsm} start -F -- /run/current-system/sw/bin/start-hyprland
+              Type=Application
+              DesktopNames=Hyprland
+            '';
+            derivationArgs.passthru.providedSessions = ["hyprland-uwsm"];
+          })
+        ];
 
         services.displayManager.defaultSession =
           "hyprland-uwsm";

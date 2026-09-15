@@ -65,7 +65,7 @@ Item {
         id: lister
         command: ["bash", "-c",
             "CACHE=\"" + root.thumbCache + "\"; shopt -s nullglob; " +
-            "for f in \"" + root.wallDir + "\"/*.jpg \"" + root.wallDir + "\"/*.jpeg \"" + root.wallDir + "\"/*.png \"" + root.wallDir + "\"/*.webp; do " +
+            "for f in \"" + root.wallDir + "\"/*.jpg \"" + root.wallDir + "\"/*.jpeg \"" + root.wallDir + "\"/*.png \"" + root.wallDir + "\"/*.webp \"" + root.wallDir + "\"/*.gif \"" + root.wallDir + "\"/*.avif; do " +
             "m=$(stat -c %Y \"$f\" 2>/dev/null || echo 0); b=$(basename \"$f\"); t=\"$CACHE/${b%.*}-$m.jpg\"; " +
             "if [ -f \"$t\" ]; then printf '%s\\t%s\\n' \"$f\" \"$t\"; else printf '%s\\t%s\\n' \"$f\" \"$f\"; fi; " +
             "done"]

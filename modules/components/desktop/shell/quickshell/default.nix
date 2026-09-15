@@ -71,6 +71,7 @@
             # Commands directly used by QML.
             self'.packages.awww
             self'.packages.iris
+            self'.packages.iris-apply
             self'.packages.swaync
           ];
 

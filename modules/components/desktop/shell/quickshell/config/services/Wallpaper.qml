@@ -41,7 +41,7 @@ Item {
                 return
 
             const command = [
-                "iris",
+                "iris-apply",
                 root.selectedPath
             ]
 
@@ -56,36 +56,5 @@ Item {
 
     Process {
         id: irisProcess
-
-        onExited: function(exitCode, exitStatus) {
-            if (exitCode !== 0)
-                return
-
-            const scheme =
-                root.selectedMode === "dark"
-                    ? "prefer-dark"
-                    : "default"
-
-            schemeProcess.exec([
-                "gsettings",
-                "set",
-                "org.gnome.desktop.interface",
-                "color-scheme",
-                scheme
-            ])
-
-            swayncReload.exec([
-                "swaync-client",
-                "-rs"
-            ])
-        }
-    }
-
-    Process {
-        id: schemeProcess
-    }
-
-    Process {
-        id: swayncReload
     }
 }

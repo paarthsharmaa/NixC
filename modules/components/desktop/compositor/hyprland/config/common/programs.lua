@@ -25,6 +25,9 @@ return {
     notifications =
         "swaync-client -t -sw",
 
+    powerMenu =
+        "uwsm app -t service -- wlogout",
+
     lock =
         "hyprlock",
 

@@ -93,8 +93,8 @@ hl.bind(
 
 hl.bind(
     mod .. " + SHIFT + E",
-    exec(programs.logout),
-    { description = "End graphical session" }
+    exec(programs.powerMenu),
+    { description = "Open power menu" }
 )
 
 -- Focus movement.

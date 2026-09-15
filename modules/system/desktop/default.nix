@@ -17,6 +17,8 @@
       hyprsunset
       clipboard
       screenshots
+
+      wlogout
     ];
   };
 }

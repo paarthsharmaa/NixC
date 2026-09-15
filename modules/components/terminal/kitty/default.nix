@@ -38,16 +38,16 @@
           scrollback_lines = 10000;
 
           window_padding_width = 9;
-          background_opacity = 0.50;
+          background_opacity = 0.75;
           confirm_os_window_close = 0;
           enable_audio_bell = false;
 
           cursor_trail = 1;
           cursor_trail_start_threshold = 1;
-          cursor_trail_color = "#cba6f7";
           cursor_shape = "beam";
 
           allow_remote_control = true;
+          listen_on = "unix:/tmp/iris-kitty.sock";
         };
 
         keybindings = {

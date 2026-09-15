@@ -1,0 +1,57 @@
+/* iris — GTK theme (GTK3 + GTK4 + libadwaita overlay) */
+
+@define-color window_bg_color {bg};
+@define-color window_fg_color {fg};
+@define-color view_bg_color {surface};
+@define-color accent_color {accent};
+@define-color accent_bg_color {accent};
+@define-color accent_fg_color {bg};
+@define-color theme_bg_color {bg};
+@define-color theme_fg_color {fg};
+@define-color theme_base_color {surface};
+@define-color theme_text_color {fg};
+@define-color theme_selected_bg_color {accent};
+@define-color theme_selected_fg_color {bg};
+@define-color theme_unfocused_bg_color {bg};
+@define-color theme_unfocused_fg_color {dim};
+@define-color unfocused_borders_color {surface};
+@define-color insensitive_bg_color {surface};
+@define-color insensitive_fg_color {dim};
+
+/* broad strokes over Adwaita */
+window, .background, dialog {
+    background-color: {bg};
+    color: {fg};
+}
+
+headerbar, .titlebar {
+    background-color: {surface};
+    color: {fg};
+}
+
+button:hover {
+    background-color: {surface};
+}
+
+button:checked, .selected {
+    background-color: {accent};
+    color: {bg};
+}
+
+selection {
+    background-color: {accent};
+    color: {bg};
+}
+
+checkbutton:checked, radiobutton:checked {
+    color: {accent};
+}
+
+scale highlight, progressbar progress {
+    background-color: {accent};
+}
+
+entry, spinbutton {
+    background-color: {surface};
+    color: {fg};
+}
