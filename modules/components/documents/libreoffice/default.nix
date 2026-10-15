@@ -1,8 +1,20 @@
-{...}: {
-  flake.nixosModules.libreoffice = {pkgs, ...}: {
-    environment.systemPackages = [
-      # Qt variant — matches the theming stack on the desktop machines.
-      pkgs.libreoffice-qt
-    ];
+{
+  inputs,
+  moduleWithSystem,
+  ...
+}: {
+  flake.nixosModules.libreoffice = moduleWithSystem (
+    {self', ...}: {...}: {
+      environment.systemPackages = [self'.packages.libreoffice];
+    }
+  );
+
+  perSystem = {pkgs, ...}: {
+    packages.libreoffice = inputs.wrappers.lib.wrapPackage (
+      {...}: {
+        inherit pkgs;
+        package = pkgs.libreoffice-qt;
+      }
+    );
   };
 }

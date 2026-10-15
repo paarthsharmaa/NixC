@@ -1,8 +1,20 @@
-{...}: {
-  flake.nixosModules.spotify = {pkgs, ...}: {
-    # Unfree; allowed globally via nixpkgs.config.allowUnfree.
-    environment.systemPackages = [
-      pkgs.spotify
-    ];
+{
+  inputs,
+  moduleWithSystem,
+  ...
+}: {
+  flake.nixosModules.spotify = moduleWithSystem (
+    {self', ...}: {...}: {
+      environment.systemPackages = [self'.packages.spotify];
+    }
+  );
+
+  perSystem = {pkgs, ...}: {
+    packages.spotify = inputs.wrappers.lib.wrapPackage (
+      {...}: {
+        inherit pkgs;
+        package = pkgs.spotify;
+      }
+    );
   };
 }

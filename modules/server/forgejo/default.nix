@@ -10,7 +10,7 @@
 
       settings = {
         server = {
-          DOMAIN = "git.lazarus";
+          DOMAIN = "lazarus";
           # Bind all interfaces: reachable on LAN and via the tailnet.
           HTTP_ADDR = "0.0.0.0";
           # Port 3003 — adguard-home owns 3000.
@@ -19,7 +19,7 @@
           ROOT_URL = "http://lazarus:3003/";
 
           # Git over SSH reuses the system sshd via authorized_keys.
-          SSH_DOMAIN = "git.lazarus";
+          SSH_DOMAIN = "lazarus";
           START_SSH_SERVER = false;
           DISABLE_SSH = false;
         };

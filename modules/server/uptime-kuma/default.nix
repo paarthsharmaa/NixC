@@ -17,7 +17,7 @@
       enable = true;
 
       settings = {
-        base-url = "http://ntfy.lazarus";
+        base-url = "http://lazarus:3002";
         listen-http = ":3002";
 
         auth-file = "/var/lib/ntfy-sh/user.db";

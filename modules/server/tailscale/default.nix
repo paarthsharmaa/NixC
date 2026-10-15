@@ -6,7 +6,8 @@
       openFirewall = true;
       useRoutingFeatures = "server";
 
-      extraUpFlags = [
+      # Applied independently of authKeyFile, including after manual login.
+      extraSetFlags = [
         "--ssh"
         "--accept-dns=false"
       ];

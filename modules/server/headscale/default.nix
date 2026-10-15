@@ -25,12 +25,10 @@
         };
 
         derp = {
-          server.enabled = true;
-          server.region_id = 999;
-          server.region_code = "lazarus";
-          server.region_name = "lazarus";
-          urls = [];
-          auto_update_enabled = false;
+          # Embedded DERP requires HTTPS. Use public relays until TLS is set up.
+          server.enabled = false;
+          urls = ["https://controlplane.tailscale.com/derpmap/default"];
+          auto_update_enabled = true;
         };
       };
     };
@@ -41,9 +39,6 @@
 
     networking.firewall.allowedTCPPorts = [
       8080 # headscale control plane
-    ];
-    networking.firewall.allowedUDPPorts = [
-      3478 # STUN (embedded DERP)
     ];
   };
 }

@@ -11,8 +11,6 @@
       openFirewall = true;
 
       settings = {
-        schema_version = 29;
-
         dns = {
           bind_hosts = ["0.0.0.0"];
           port = 53;
@@ -24,12 +22,12 @@
 
           bootstrap_dns = ["1.1.1.1" "8.8.8.8"];
 
-          # Blocklists are configured in the web UI on first run.
-          filtering.enabled = true;
-
           # Keep clients (yoga/legion) identifiable by hostname.
           use_private_ptr_resolvers = true;
         };
+
+        # Blocklists are configured in the web UI on first run.
+        filtering.filtering_enabled = true;
 
         # DHCP off; the router owns the LAN.
         dhcp.enabled = false;
@@ -38,7 +36,6 @@
 
     networking.firewall.allowedTCPPorts = [
       53 # dns
-      3000 # web UI
     ];
     networking.firewall.allowedUDPPorts = [
       53
