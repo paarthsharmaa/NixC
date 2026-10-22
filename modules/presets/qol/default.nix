@@ -19,6 +19,7 @@
       mpv
       spotify
       loupe
+      persepolis
     ];
   };
 }

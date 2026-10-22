@@ -5,6 +5,7 @@
       bluetui
       btop
       eza
+      fastfetch
       fd
       fzf
       lazydocker

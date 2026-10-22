@@ -51,8 +51,7 @@
         runtimePkgs = [
           pkgs.any-nix-shell
           pkgs.carapace
-          pkgs.devenv
-
+          self'.packages.devenv
           self'.packages.bat
           self'.packages.eza
           self'.packages.fd
@@ -139,7 +138,7 @@
           source <(${lib.getExe self'.packages.fzf} --zsh)
 
           eval "$(${lib.getExe self'.packages.zoxide} init zsh)"
-          eval "$(${lib.getExe pkgs.devenv} hook zsh)"
+          eval "$(${lib.getExe self'.packages.devenv} hook zsh)"
 
           eval "$(
             ${lib.getExe self'.packages.ohMyPosh} init zsh

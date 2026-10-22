@@ -6,6 +6,8 @@
       zsh
       jj
       tmux
+      aria2
+      devenv
     ];
 
     environment.systemPackages = with pkgs; [

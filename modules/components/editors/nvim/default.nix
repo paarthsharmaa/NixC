@@ -20,6 +20,15 @@
     packages.nvim = inputs.wrappers.wrappers.neovim.wrap {
       inherit pkgs;
 
+      # Compatibility fix for the pinned wrapper's deprecated platform check.
+      # Remove when the wrappers input uses hostPlatform in this builder.
+      builderFunction = import (builtins.toFile "neovim-symlinkScript.nix" (
+        builtins.replaceStrings
+        ["stdenv.isLinux"]
+        ["stdenv.hostPlatform.isLinux"]
+        (builtins.readFile "${inputs.wrappers}/wrapperModules/n/neovim/symlinkScript.nix")
+      ));
+
       settings.config_directory = ./config;
 
       runtimePkgs = with pkgs; [

@@ -21,9 +21,9 @@
 
       runtimePkgs = [
         self'.packages.git
-        pkgs.fd
+        self'.packages.fd
         pkgs.jq
-        pkgs.ripgrep
+        self'.packages.ripgrep
       ];
 
       settings = {

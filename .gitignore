@@ -3,5 +3,5 @@ result-*
 .direnv
 **/.qmlls.ini
 .session
-
+.devenv
 *.bak
