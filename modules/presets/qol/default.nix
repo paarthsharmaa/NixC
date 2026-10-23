@@ -14,6 +14,8 @@
       # Documents
       zathura
       libreoffice
+      lokus
+      obsidian
 
       # Media
       mpv

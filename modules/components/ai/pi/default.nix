@@ -9,11 +9,11 @@
     }
   );
 
-  perSystem = {pkgs, ...}: {
+  perSystem = {pkgs, inputs', ...}: {
     packages.pi = inputs.wrappers.lib.wrapPackage (
       {...}: {
         inherit pkgs;
-        package = pkgs.pi-coding-agent;
+        package = inputs'.llm-agents.packages.pi;
       }
     );
   };

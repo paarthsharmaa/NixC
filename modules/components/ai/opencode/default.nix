@@ -11,19 +11,16 @@
     }
   );
 
-  perSystem = {
-    pkgs,
-    self',
-    ...
-  }: {
+  perSystem = {pkgs, inputs', self', ...}: {
     packages.opencode = inputs.wrappers.wrappers.opencode.wrap {
       inherit pkgs;
+      package = inputs'.llm-agents.packages.opencode2;
 
       runtimePkgs = [
         self'.packages.git
         self'.packages.fd
         pkgs.jq
-        self'.packages.ripgrep
+        self'.packages.rg
       ];
 
       settings = {

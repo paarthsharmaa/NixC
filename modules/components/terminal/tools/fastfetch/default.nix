@@ -11,8 +11,10 @@
 
   perSystem = {pkgs, ...}: {
     packages.fastfetch = inputs.wrappers.lib.wrapPackage (
-      inherit pkgs;
-      package = pkgs.fastfetch;
+      {...}: {
+        inherit pkgs;
+        package = pkgs.fastfetch;
+      }
     );
   };
 }

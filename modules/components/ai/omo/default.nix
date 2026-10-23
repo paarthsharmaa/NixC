@@ -1,7 +1,7 @@
 {
   inputs,
   moduleWithSystem,
-  ...,
+  ...
 }: {
   flake.nixosModules.omo = moduleWithSystem (
     {self', ...}: {...}: {
