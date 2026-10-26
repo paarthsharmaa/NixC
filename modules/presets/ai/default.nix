@@ -1,10 +1,11 @@
 {self, ...}: {
   flake.nixosModules.ai = {
     imports = with self.nixosModules; [
-      opencode
+      claudeCode
       codex
-      pi
       omo
+      opencode
+      pi
     ];
   };
 }

@@ -8,6 +8,7 @@ return {
   },
 
   keys = {
+    { "<leader>bd", function() Snacks.bufdelete() end, desc = "Delete Buffer" },
     { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Toggle Pin" },
     { "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete Non-Pinned Buffers" },
     { "<leader>br", "<Cmd>BufferLineCloseRight<CR>", desc = "Delete Buffers to the Right" },
@@ -45,9 +46,8 @@ return {
 
       offsets = {
         {
-          -- Snacks.explorer opens a plain sidebar buffer with this
-          -- filetype (not a snacks_layout_box).
-          filetype = "snacks_tree",
+          -- Snacks picker sidebars use a layout container split.
+          filetype = "snacks_layout_box",
           text = "Explorer",
           highlight = "Directory",
           text_align = "left",
