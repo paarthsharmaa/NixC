@@ -6,6 +6,7 @@
 
       dolphin
       fuzzel
+      cheese
 
       brave
       librewolf
