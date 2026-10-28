@@ -24,6 +24,13 @@ window, .background, dialog {
     color: {fg};
 }
 
+/* User GTK CSS overrides application CSS. Capture overlays must stay
+   transparent so the underlying page remains visible and can be captured. */
+window.scroll-capture-overlay,
+window.region-capture-overlay {
+    background: transparent;
+}
+
 headerbar, .titlebar {
     background-color: {surface};
     color: {fg};

@@ -2,6 +2,8 @@
   flake.nixosModules.development = {pkgs, ...}: {
     imports = with self.nixosModules; [
       git
+      gittype
+      gitlogue
       nvim
       zsh
       jj

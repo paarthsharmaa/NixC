@@ -10,6 +10,8 @@ import "services"
 ShellRoot {
     id: root
 
+    ScreenCorners {}
+
     property bool   osdVisible: false
     property string osdType: ""
 
