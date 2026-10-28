@@ -33,6 +33,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    tensaku-src = {
+      url = "github:jondkinney/tensaku";
+      flake = false;
+    };
+
     llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
