@@ -6,7 +6,9 @@
   flake.nixosModules.fuzzel = moduleWithSystem (
     {self', ...}: {...}: {
       environment.systemPackages = [
-        self'.packages.fuzzel ]; }
+        self'.packages.fuzzel
+      ];
+    }
   );
 
   perSystem = {

@@ -39,16 +39,6 @@
     };
 
     llm-agents.url = "github:numtide/llm-agents.nix";
-
-    gittype = {
-      url = "github:unhappychoice/gittype";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    gitlogue = {
-      url = "github:unhappychoice/gitlogue";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);

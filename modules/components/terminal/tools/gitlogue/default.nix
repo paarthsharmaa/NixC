@@ -5,7 +5,7 @@
     }
   );
 
-  perSystem = {inputs', ...}: {
-    packages.gitlogue = inputs'.gitlogue.packages.default;
+  perSystem = {pkgs, ...}: {
+    packages.gitlogue = pkgs.gitlogue;
   };
 }

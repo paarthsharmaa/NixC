@@ -2,6 +2,10 @@
 
 The `development` preset installs the wrapped devenv CLI on Yoga, Legion, and Lazarus. The Zsh wrapper uses the same package for its existing auto-activation hook.
 
+For the shared editor setup, project language servers, formatters, uv, and QML
+imports, see [Neovim with project environments](neovim.md). Launch Neovim from
+`devenv shell` (or after devenv's native Zsh activation); no direnv is needed.
+
 ## Enable the new module
 
 From the NixC checkout on Yoga:

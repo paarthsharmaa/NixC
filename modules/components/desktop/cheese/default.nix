@@ -5,7 +5,7 @@
 }: {
   flake.nixosModules.cheese = moduleWithSystem (
     {self', ...}: {
-    environment.systemPackages = [self'.packages.cheese];
+      environment.systemPackages = [self'.packages.cheese];
     }
   );
   perSystem = {pkgs, ...}: {

@@ -31,6 +31,11 @@
 
       settings.config_directory = ./config;
 
+      # Lua plugins use LSP subprocesses, not Neovim remote plugin hosts.
+      hosts.python3.nvim-host.enable = false;
+      hosts.node.nvim-host.enable = false;
+      hosts.ruby.nvim-host.enable = false;
+
       runtimePkgs = with pkgs; [
         # Required by lazy.nvim.
         git
@@ -43,10 +48,7 @@
         # Wayland clipboard provider.
         wl-clipboard
 
-        # Tools for editing Nix and Lua later.
-        nixd
-        lua-language-server
-        stylua
+        # Language tools come from the project's devenv shell.
       ];
     };
   };
