@@ -1,7 +1,7 @@
 {self, ...}: {
   flake.nixosModules.qol = {
     imports = with self.nixosModules; [
-      iris
+      matugen
       qtTheme
 
       dolphin

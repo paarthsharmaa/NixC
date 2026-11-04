@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
+import Quickshell.Widgets
 import "../services"
 
 FocusScope {
@@ -66,7 +67,9 @@ FocusScope {
             "service",
 
             "--",
-            app.id
+            // uwsm treats a bare id ("org.kde.dolphin") as a command name;
+            // the ".desktop" suffix makes it launch the desktop entry.
+            app.id + ".desktop"
         ])
 
         root.dismiss()
@@ -90,11 +93,7 @@ FocusScope {
                 color: Colors.foreground; font.pixelSize: 17; font.family: "JetBrainsMono Nerd Font"
                 selectionColor: Colors.color8; clip: true
 
-                onTextChanged: {
-                    const q = text.trim().toLowerCase()
-                    root.filteredApps = q === "" ? root.allApps : root.allApps.filter(a => a.name.toLowerCase().includes(q))
-                    list.currentIndex = 0
-                }
+                onTextChanged: list.currentIndex = 0
 
                 Keys.onEscapePressed: { root.dismiss(); event.accepted = true }
                 Keys.onReturnPressed: { root.launch(list.currentIndex); event.accepted = true }
@@ -131,9 +130,18 @@ FocusScope {
                     Behavior on color { ColorAnimation { duration: 100 } }
                 }
 
+                IconImage {
+                    id: appIcon
+                    anchors { left: parent.left; leftMargin: 22; verticalCenter: parent.verticalCenter }
+                    implicitSize: 32
+                    asynchronous: true
+                    source: Quickshell.iconPath(row.modelData.icon, "application-x-executable")
+                }
+
                 Text {
-                    anchors { left: parent.left; leftMargin: 24; verticalCenter: parent.verticalCenter }
+                    anchors { left: appIcon.right; leftMargin: 14; right: parent.right; rightMargin: 14; verticalCenter: parent.verticalCenter }
                     text: row.modelData.name; color: Colors.foreground; font.pixelSize: 15; font.family: "JetBrainsMono Nerd Font"
+                    elide: Text.ElideRight
                 }
 
                 MouseArea {

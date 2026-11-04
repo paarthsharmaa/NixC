@@ -118,6 +118,16 @@ Item {
 
         Keys.onEscapePressed: { root.dismiss(); event.accepted = true }
         Keys.onSpacePressed: { root.mode = (root.mode === "dark" ? "light" : "dark"); event.accepted = true }
+        // L = light, D = dark.
+        Keys.onPressed: event => {
+            if (event.key === Qt.Key_L) {
+                root.mode = "light"
+                event.accepted = true
+            } else if (event.key === Qt.Key_D) {
+                root.mode = "dark"
+                event.accepted = true
+            }
+        }
         Keys.onReturnPressed: {
             if (grid.currentIndex >= 0 && grid.currentIndex < WallpaperIndex.model.count) {
               Wallpaper.apply(

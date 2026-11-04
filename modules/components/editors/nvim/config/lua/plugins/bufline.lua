@@ -48,7 +48,7 @@ return {
         {
           -- Snacks picker sidebars use a layout container split.
           filetype = "snacks_layout_box",
-          text = "Explorer",
+          text = "",
           highlight = "Directory",
           text_align = "left",
         },

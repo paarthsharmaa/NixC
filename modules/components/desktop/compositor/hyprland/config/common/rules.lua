@@ -26,3 +26,15 @@ hl.window_rule({
 
     no_focus = true,
 })
+
+-- Notification center drops down from the top edge.
+hl.layer_rule({
+    name =
+        "notification-center-slide",
+
+    match = {
+        namespace = "^swaync-control-center$",
+    },
+
+    animation = "slide top",
+})

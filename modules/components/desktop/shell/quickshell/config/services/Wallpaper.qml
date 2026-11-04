@@ -40,21 +40,15 @@ Item {
             if (exitCode !== 0)
                 return
 
-            const command = [
-                "iris-apply",
-                root.selectedPath
-            ]
-
-            if (root.selectedMode === "dark")
-                command.push("--dark", "1")
-            else if (root.selectedMode === "light")
-                command.push("--dark", "0")
-
-            irisProcess.exec(command)
+            themeProcess.exec([
+                "theme-apply",
+                root.selectedPath,
+                root.selectedMode === "light" ? "light" : "dark"
+            ])
         }
     }
 
     Process {
-        id: irisProcess
+        id: themeProcess
     }
 }

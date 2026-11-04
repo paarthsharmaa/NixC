@@ -47,14 +47,20 @@
           cursor_shape = "beam";
 
           allow_remote_control = true;
-          listen_on = "unix:/tmp/iris-kitty.sock";
+          listen_on = "unix:/tmp/kitty-theme.sock";
         };
 
         keybindings = {
           "ctrl+backspace" = "send_text all \\x17";
         };
 
+        # Static fallback theme; the matugen palette below overrides it
+        # once `theme-apply` has run.
         themeFile = "Catppuccin-Mocha";
+
+        extraConfig = ''
+          include ''${HOME}/.cache/matugen/kitty-colors.conf
+        '';
       };
   };
 }

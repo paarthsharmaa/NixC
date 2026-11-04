@@ -21,8 +21,22 @@ return {
 					which_key = true,
 				},
 			})
+		end,
+	},
 
-			vim.cmd.colorscheme("catppuccin")
+	-- Colors follow the wallpaper (matugen); catppuccin above is the fallback.
+	{
+		"nvim-mini/mini.base16",
+		version = false,
+		lazy = false,
+		priority = 999,
+
+		dependencies = {
+			"catppuccin",
+		},
+
+		config = function()
+			require("config.matugen").load()
 		end,
 	},
 
@@ -39,14 +53,17 @@ return {
 			"nvim-tree/nvim-web-devicons",
 		},
 
-		opts = {
-			options = {
-				theme = "auto",
+		-- A function, so the theme is built from the matugen colors at load time.
+		opts = function()
+			return {
+				options = {
+					theme = require("config.matugen").lualine_theme(),
 				globalstatus = true,
-				section_separators = "",
-				component_separators = "",
-			},
-		},
+					section_separators = "",
+					component_separators = "",
+				},
+			}
+		end,
 	},
 
 	{

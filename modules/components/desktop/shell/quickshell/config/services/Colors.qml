@@ -12,7 +12,7 @@ Item {
 
         path:
             Quickshell.env("HOME")
-            + "/.cache/iris/quickshell.json"
+            + "/.cache/matugen/quickshell.json"
 
         watchChanges: true
         printErrors: false

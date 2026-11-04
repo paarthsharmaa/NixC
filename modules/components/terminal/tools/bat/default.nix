@@ -21,6 +21,9 @@
         flags = {
           "--style" = "plain";
           "--paging" = "never";
+          # Use the terminal's 16 colors, so bat follows the matugen
+          # palette in kitty.
+          "--theme" = "ansi";
         };
 
         flagSeparator = "=";

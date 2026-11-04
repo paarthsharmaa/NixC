@@ -21,6 +21,8 @@
 
         rounded_corners = true;
         theme_background = false;
+        # TTY theme = terminal's 16 colors, so btop follows kitty's palette.
+        color_theme = "TTY";
 
         proc_sorting = "cpu lazy";
         proc_tree = false;

@@ -6,6 +6,8 @@ opt.relativenumber = true
 opt.signcolumn = "yes"
 opt.termguicolors = true
 opt.cursorline = true
+-- No "~" on the empty lines after the end of a file.
+opt.fillchars:append({ eob = " " })
 opt.showmode = false
 
 -- Editing

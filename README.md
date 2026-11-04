@@ -49,7 +49,7 @@ modules/
 │   ├── workstation/     #   desktop + development + qol + ai + fonts
 │   ├── server/          #   core + network + all modules under server/
 │   ├── development/     #   git, nvim, zsh, jj, tmux, toolchains
-│   ├── qol/             #   iris theming, browsers, dolphin, docs, media
+│   ├── qol/             #   matugen theming, browsers, dolphin, docs, media
 │   └── ai/              #   opencode, codex
 ├── system/              # OS plumbing: core (boot/hardware/locale/nix/user),
 │                        # desktop, audio, network, power, nix-ld, docker
@@ -109,7 +109,7 @@ Hardware keys work even on the lock screen and even if Quickshell is down: volum
 
 ## Theming
 
-Theming is centralized in **[iris](https://github.com/Harman1307/iris)** (built as a wrapped package from flake input). `iris` generates a palette from the wallpaper and `iris-apply` re-skins the entire desktop at runtime: GTK 3/4, Qt/kdeglobals, kitty (live-reloaded over its IPC socket), swaync, wlogout (icons recolored on the fly), and hyprlock — all rendered from templates into `~/.cache/iris`. A `systemd` user service (`iris-restore`) re-applies the last palette on every login, so the theme survives reboots without any home-manager.
+Theming is centralized in **[matugen](https://github.com/InioX/matugen)**, which builds a Material You palette from the wallpaper. `theme-apply <wallpaper> [dark|light]` (called by the Quickshell wallpaper picker) renders the templates in `modules/components/theme/matugen/templates` into `~/.cache/matugen` and re-skins the desktop at runtime: Quickshell, GTK 3/4, Qt/kdeglobals + Kvantum, kitty (live-reloaded over its IPC socket, and included by new windows), swaync, wlogout (icons recolored on the fly), Hyprland borders, and hyprlock. Templates use semantic Material roles (`surface`, `on_surface`, `on_surface_variant`, `primary`, `outline`...), so text always has proper contrast. A `systemd` user service (`theme-restore`) re-applies the last theme on every login, so it survives reboots without any home-manager.
 
 ## Machines
 

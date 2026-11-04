@@ -1,20 +1,30 @@
+# Look of GTK and Qt apps: widget style, icons and cursor.
+# Colors come from matugen at runtime (see theme/matugen): theme-apply writes
+# qt6ct/qt5ct palettes, kdeglobals and gtk.css into ~/.config.
 {moduleWithSystem, ...}: {
   flake.nixosModules.qtTheme = moduleWithSystem (
     {pkgs, ...}: {...}: {
       environment.systemPackages = with pkgs; [
-        # Configuration GUIs
+        # Qt: qt6ct/qt5ct apply the palette. Darkly (a rounded, flat Breeze
+        # fork — the style end-4's dots use) is the Qt6 widget style; Breeze
+        # stays installed as a fallback.
         kdePackages.qt6ct
         libsForQt5.qt5ct
+        darkly
+        kdePackages.breeze
 
-        # Kvantum style engines
-        kdePackages.qtstyleplugin-kvantum
-        libsForQt5.qtstyleplugin-kvantum
+        # GTK3 theme that matches libadwaita (GTK4) apps.
+        adw-gtk3
+
+        papirus-icon-theme
+        rose-pine-cursor
       ];
 
       environment.sessionVariables = {
-        # Most of your new Qt applications will be Qt 6.
         QT_QPA_PLATFORMTHEME = "qt6ct";
-        QT_STYLE_OVERRIDE = "kvantum";
+
+        XCURSOR_THEME = "BreezeX-RosePine-Linux";
+        XCURSOR_SIZE = "24";
       };
     }
   );

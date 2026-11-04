@@ -1,0 +1,121 @@
+/* matugen — appended after swaync's upstream style.css, so these rules
+   override its defaults. Keyboard: C clears, D toggles Do Not Disturb
+   (Hyprland submap, see hyprland/config/common/notifications.lua). */
+:root {
+  --cc-bg: {{colors.surface.default.hex}};
+
+  --noti-border-color: transparent;
+  --noti-bg: {{colors.surface_container_high.default.red}}, {{colors.surface_container_high.default.green}}, {{colors.surface_container_high.default.blue}};
+  --noti-bg-alpha: 1;
+  --noti-bg-darker: {{colors.surface_container.default.hex}};
+  --noti-bg-hover: {{colors.surface_container_highest.default.hex}};
+  --noti-bg-focus: transparent;
+
+  --noti-close-bg: {{colors.surface_container_highest.default.hex}};
+  --noti-close-bg-hover: {{colors.error_container.default.hex}};
+
+  --text-color: {{colors.on_surface.default.hex}};
+  --text-color-disabled: {{colors.on_surface_variant.default.hex}};
+
+  --bg-selected: {{colors.primary.default.hex}};
+
+  --border-radius: 16px;
+  --notification-icon-size: 48px;
+  --notification-shadow: none;
+  --font-size-summary: 15px;
+  --font-size-body: 13px;
+}
+
+/* Panel */
+.control-center {
+  border: 1px solid {{colors.outline_variant.default.hex}};
+  border-radius: 24px;
+  padding: 12px 4px;
+}
+
+.control-center .control-center-list-placeholder {
+  color: {{colors.on_surface_variant.default.hex}};
+  opacity: 0.8;
+}
+
+/* Header: title + Clear, Do Not Disturb */
+.widget-title {
+  margin: 8px 16px 4px 16px;
+}
+
+.widget-title > label {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.widget-title > button {
+  background: {{colors.secondary_container.default.hex}};
+  color: {{colors.on_secondary_container.default.hex}};
+  border: none;
+  border-radius: 999px;
+  padding: 4px 14px;
+}
+
+.widget-title > button:hover {
+  background: {{colors.primary.default.hex}};
+  color: {{colors.on_primary.default.hex}};
+}
+
+.widget-title > button:disabled {
+  background: {{colors.surface_container_high.default.hex}};
+  color: {{colors.outline.default.hex}};
+}
+
+.widget-dnd {
+  margin: 4px 16px 12px 16px;
+}
+
+.widget-dnd switch {
+  background: {{colors.surface_container_highest.default.hex}};
+  border: 2px solid {{colors.outline.default.hex}};
+}
+
+.widget-dnd switch:checked {
+  background: {{colors.primary.default.hex}};
+  border-color: {{colors.primary.default.hex}};
+}
+
+.widget-dnd switch slider {
+  background: {{colors.outline.default.hex}};
+}
+
+.widget-dnd switch:checked slider {
+  background: {{colors.on_primary.default.hex}};
+}
+
+/* Notification cards */
+.notification-row .notification-background {
+  padding: 4px 12px;
+}
+
+.notification-row:focus .notification-background .notification {
+  box-shadow: inset 0 0 0 2px {{colors.primary.default.hex}};
+}
+
+.notification-row .notification-background .notification:hover {
+  background: var(--noti-bg-hover);
+}
+
+.notification-row .notification-background .notification .notification-default-action .notification-content .text-box .summary {
+  color: {{colors.on_surface.default.hex}};
+}
+
+.notification-row .notification-background .notification .notification-default-action .notification-content .text-box .time,
+.notification-row .notification-background .notification .notification-default-action .notification-content .text-box .body {
+  color: {{colors.on_surface_variant.default.hex}};
+}
+
+/* Critical: accent stripe on the left instead of a red frame */
+.notification-row .notification-background .notification.critical {
+  border-left: 4px solid {{colors.error.default.hex}};
+}
+
+/* Popups (outside the panel) */
+.floating-notifications .notification-row .notification-background .notification {
+  border: 1px solid {{colors.outline_variant.default.hex}};
+}

@@ -14,7 +14,7 @@
 
   "fit-to-screen": false,
 
-  "control-center-margin-top": 72,
+  "control-center-margin-top": 12,
   "control-center-margin-right": 12,
   "control-center-margin-bottom": 12,
   "control-center-margin-left": 12,
@@ -22,7 +22,7 @@
   "notification-window-width": 420,
 
   "control-center-width": 430,
-  "control-center-height": 650,
+  "control-center-height": 600,
 
   "timeout": 8,
   "timeout-low": 4,

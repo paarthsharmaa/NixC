@@ -70,10 +70,20 @@
 
             # Commands directly used by QML.
             self'.packages.awww
-            self'.packages.iris
-            self'.packages.iris-apply
+            self'.packages.theme-apply
             self'.packages.swaync
+
+            # Apps launched from the launcher. `uwsm app` checks that a
+            # desktop entry's Exec (e.g. `dolphin`) exists in *its* PATH,
+            # which is inherited from this service, so the system and user
+            # profiles must be on it. (makeBinPath adds the /bin.)
+            "/run/wrappers"
+            "/etc/profiles/per-user/paarth"
+            "/run/current-system/sw"
           ];
+
+          # Icon theme used by Quickshell.iconPath (launcher app icons).
+          environment.QS_ICON_THEME = "Papirus-Dark";
 
           serviceConfig = {
             ExecStart = ''

@@ -39,36 +39,33 @@ FocusScope {
     // slider row, so repurposing Left/Right there is unambiguous).
     property int navIndex: 0
     readonly property var navRows: [
-        ["mute", "profile", "sunset", "nmtui"],
-        ["play", "prev", "next"],
+        ["mute", "profile", "sunset", "wifi"],
+        ["play", "prev", "next", "bluetooth"],
         ["volume"],
-        ["brightness"]
+        ["brightness"],
+        ["files", "stats", "audio"]
     ]
     readonly property var navFlat: navRows.reduce((a, r) => a.concat(r), [])
     readonly property string navCurrent: navFlat[Math.max(0, Math.min(navFlat.length - 1, root.navIndex))]
 
-    function launchNmtui(): void {
-        const kitty =
-            DesktopEntries.heuristicLookup(
-                "kitty"
-            )
-
-        if (!kitty)
-            return
-
+    // Open a terminal app (wlctl, bluetui, wiremix) in kitty. --app-id sets
+    // the Wayland app_id, so Hyprland window rules can match it.
+    function launchTui(command: string): void {
         Quickshell.execDetached([
-            "uwsm",
-            "app",
-            "-t",
-            "service",
-            "--",
-            kitty.id,
-            "--app-id",
-            "nmtui",
-            "-e",
-            "nmtui"
+            "uwsm", "app", "-t", "service", "--",
+            "kitty", "--app-id", command, "-e", command
         ])
 
+        root.dismiss()
+    }
+
+    function launchFiles(): void {
+        Quickshell.execDetached(["uwsm", "app", "-t", "service", "--", "org.kde.dolphin.desktop"])
+        root.dismiss()
+    }
+
+    function launchStats(): void {
+        Quickshell.execDetached(["qs", "ipc", "call", "island", "sysinfo"])
         root.dismiss()
     }
 
@@ -99,16 +96,14 @@ FocusScope {
         case "mute":    Audio.toggleMute(); break
         case "profile": { const p = PowerProfile.profiles; PowerProfile.setProfile(p[(p.indexOf(PowerProfile.current) + 1) % p.length]); break }
         case "sunset":  HyprSunset.toggle(); break
-        // kitty is installed via home-manager (programs.kitty.enable), so it
-        // lives at ~/.nix-profile/bin/kitty, NOT /run/current-system/sw/bin/.
-        // Using an absolute system path that doesn't exist caused execDetached
-        // to fail silently. Use bare "kitty" so PATH resolves correctly.
-        // --app-id (not --class) sets the Wayland app_id that Hyprland's
-        // windowrule matches against; --class only sets the X11 WM_CLASS.
-        case "nmtui":   root.launchNmtui(); break
-        case "play":    Media.toggle(); break
-        case "prev":    Media.prev(); break
-        case "next":    Media.next(); break
+        case "wifi":      root.launchTui("wlctl"); break
+        case "bluetooth": root.launchTui("bluetui"); break
+        case "audio":     root.launchTui("wiremix"); break
+        case "files":     root.launchFiles(); break
+        case "stats":     root.launchStats(); break
+        case "play":      Media.toggle(); break
+        case "prev":      Media.prev(); break
+        case "next":      Media.next(); break
         }
     }
     function navAdjust(delta: int): void {
@@ -130,6 +125,37 @@ FocusScope {
     }
     Keys.onReturnPressed: function(ev) { root.navActivate(); ev.accepted = true }
     Keys.onSpacePressed:  function(ev) { root.navActivate(); ev.accepted = true }
+
+    // ── Launcher tile (icon + label, opens something) ───────────────────────
+    component LaunchTile: Rectangle {
+        id: tile
+        property string navKey: ""
+        property string icon: ""
+        property string label: ""
+        signal activated()
+
+        width: (parent.width - 30) / 4; height: 84; radius: 18; color: Colors.color0
+        border.width: root.navCurrent === tile.navKey ? 2 : 0
+        border.color: Colors.foreground
+        scale: tileMa.containsMouse ? 0.93 : 1.0
+        Behavior on scale { SpringAnimation { spring: 8; damping: 0.8 } }
+
+        Column {
+            anchors.centerIn: parent; spacing: 6
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: tile.icon; color: Colors.color8
+                font.pixelSize: 24; font.family: "JetBrainsMono Nerd Font"
+            }
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: tile.label; color: Colors.color8
+                font.pixelSize: 17; font.family: "JetBrainsMono Nerd Font"
+            }
+        }
+
+        MouseArea { id: tileMa; anchors.fill: parent; hoverEnabled: true; onClicked: tile.activated() }
+    }
 
     // ── Inline slider component ───────────────────────────────────────────────
     component SliderRow: Item {
@@ -232,7 +258,7 @@ FocusScope {
 
             Rectangle { width: parent.width; height: 1; color: Colors.color0 }
 
-            // ── Quick tiles row 1: Mute | PowerProfile | HyprSunset | Impala ─
+            // ── Quick tiles row 1: Mute | PowerProfile | HyprSunset | WiFi ──
             Row {
                 width: parent.width; spacing: 12
 
@@ -333,38 +359,13 @@ FocusScope {
                     MouseArea { id: sunsetTileMa; anchors.fill: parent; hoverEnabled: true; onClicked: HyprSunset.toggle() }
                 }
 
-                // Launch nmtui
-                Rectangle {
-                    id: nmtuiTile
-                    width: (parent.width - 30) / 4; height: 84; radius: 18; color: Colors.color0
-                    border.width: root.navCurrent === "nmtui" ? 2 : 0
-                    border.color: Colors.foreground
-                    scale: nmtuiMa.containsMouse ? 0.93 : 1.0
-                    Behavior on scale { SpringAnimation { spring: 8; damping: 0.8 } }
-                    Column {
-                        anchors.centerIn: parent; spacing: 6
-                        Text {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: "󰖟"; color: Colors.color8
-                            font.pixelSize: 24; font.family: "JetBrainsMono Nerd Font"
-                        }
-                        Text {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: "nmtui"; color: Colors.color8
-                            font.pixelSize: 17; font.family: "JetBrainsMono Nerd Font"
-                        }
-                    }
-                    MouseArea {
-                        id: nmtuiMa
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        onClicked:
-                            root.launchNmtui()
-                    }
+                LaunchTile {
+                    navKey: "wifi"; icon: "󰖩"; label: "WiFi"
+                    onActivated: root.launchTui("wlctl")
                 }
             }
 
-            // ── Quick tiles row 2: Play | Skip | Prev | (spacer) ─────────────
+            // ── Quick tiles row 2: Play | Prev | Next | Bluetooth ────────────
             Row {
                 width: parent.width; spacing: 12
 
@@ -425,53 +426,9 @@ FocusScope {
                     MouseArea { id: skipTileMa2; anchors.fill: parent; hoverEnabled: true; onClicked: Media.next() }
                 }
 
-                // Placeholder 4th tile (spacer) (swaync)
-                Rectangle {
-                    width: (parent.width - 30) / 4
-                    height: 84
-                    radius: 18
-                    color: Colors.color0
-
-                    Column {
-                        anchors.centerIn: parent
-                        spacing: 6
-
-                        Text {
-                            anchors.horizontalCenter:
-                                parent.horizontalCenter
-
-                            text: "󰂚"
-                            color: Colors.color8
-                            font.pixelSize: 24
-                            font.family:
-                                "JetBrainsMono Nerd Font"
-                        }
-
-                        Text {
-                            anchors.horizontalCenter:
-                                parent.horizontalCenter
-
-                            text: "Notifications"
-                            color: Colors.color8
-                            font.pixelSize: 14
-                            font.family:
-                                "JetBrainsMono Nerd Font"
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-
-                        onClicked: {
-                            Quickshell.execDetached([
-                                "swaync-client",
-                                "-t",
-                                "-sw"
-                            ])
-
-                            root.dismiss()
-                        }
-                    }
+                LaunchTile {
+                    navKey: "bluetooth"; icon: "󰂯"; label: "Bluetooth"
+                    onActivated: root.launchTui("bluetui")
                 }
             }
 
@@ -628,139 +585,24 @@ FocusScope {
                 }
             }
 
-            // ── Quick tiles row 3: Files | Sysinfo ─────────────────────
+            // ── Quick tiles row 3: Files | Stats | Audio ───────────────
             Row {
                 width: parent.width
                 spacing: 12
 
-                Rectangle {
-                    width: (parent.width - 30) / 4
-                    height: 84
-                    radius: 18
-                    color: Colors.color0
-
-                    scale: filesMa.containsMouse ? 0.93 : 1.0
-
-                    Behavior on scale {
-                        SpringAnimation {
-                            spring: 8
-                            damping: 0.8
-                        }
-                    }
-
-                    Column {
-                        anchors.centerIn: parent
-                        spacing: 6
-
-                        Text {
-                            anchors.horizontalCenter:
-                                parent.horizontalCenter
-
-                            text: "󰝰"
-                            color: Colors.color8
-                            font.pixelSize: 24
-                            font.family:
-                                "JetBrainsMono Nerd Font"
-                        }
-
-                        Text {
-                            anchors.horizontalCenter:
-                                parent.horizontalCenter
-
-                            text: "Files"
-                            color: Colors.color8
-                            font.pixelSize: 17
-                            font.family:
-                                "JetBrainsMono Nerd Font"
-                        }
-                    }
-
-                    MouseArea {
-                        id: filesMa
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-
-                        onClicked: {
-                            Quickshell.execDetached([
-                                "dolphin"
-                            ])
-
-                            root.dismiss()
-                        }
-                    }
+                LaunchTile {
+                    navKey: "files"; icon: "󰝰"; label: "Files"
+                    onActivated: root.launchFiles()
                 }
 
-                Rectangle {
-                    width: (parent.width - 30) / 4
-                    height: 84
-                    radius: 18
-                    color: Colors.color0
-
-                    scale: sysMa.containsMouse ? 0.93 : 1.0
-
-                    Behavior on scale {
-                        SpringAnimation {
-                            spring: 8
-                            damping: 0.8
-                        }
-                    }
-
-                    Column {
-                        anchors.centerIn: parent
-                        spacing: 6
-
-                        Text {
-                            anchors.horizontalCenter:
-                                parent.horizontalCenter
-
-                            text: "󰘚"
-                            color: Colors.color8
-                            font.pixelSize: 24
-                            font.family:
-                                "JetBrainsMono Nerd Font"
-                        }
-
-                        Text {
-                            anchors.horizontalCenter:
-                                parent.horizontalCenter
-
-                            text: "Stats"
-                            color: Colors.color8
-                            font.pixelSize: 17
-                            font.family:
-                                "JetBrainsMono Nerd Font"
-                        }
-                    }
-
-                    MouseArea {
-                        id: sysMa
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-
-                        onClicked: {
-                            Quickshell.execDetached([
-                                "qs",
-                                "ipc",
-                                "call",
-                                "island",
-                                "sysinfo"
-                            ])
-
-                            root.dismiss()
-                        }
-                    }
+                LaunchTile {
+                    navKey: "stats"; icon: "󰘚"; label: "Stats"
+                    onActivated: root.launchStats()
                 }
 
-                Item {
-                    width: (parent.width - 30) / 4
-                    height: 84
-                }
-
-                Item {
-                    width: (parent.width - 30) / 4
-                    height: 84
+                LaunchTile {
+                    navKey: "audio"; icon: "󰕾"; label: "Audio"
+                    onActivated: root.launchTui("wiremix")
                 }
             }
 

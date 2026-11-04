@@ -17,6 +17,7 @@ local hostname =
 hostnameFile:close()
 
 require("common.appearance")
+require("common.theme")
 require("common.input")
 require("common.binds")
 require("common.rules")
