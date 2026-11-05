@@ -33,6 +33,11 @@
       # core sets systemd-boot with mkDefault, so this plain value wins.
       boot.loader.systemd-boot.enable = false;
 
+      # Menu countdown in seconds (NixOS default: 5). Limine stops the
+      # countdown on any key press, so the menu stays open once you touch
+      # an arrow key.
+      boot.loader.timeout = lib.mkDefault 10;
+
       boot.loader.limine = {
         enable = true;
         efiSupport = true;
@@ -41,16 +46,41 @@
         # `nixos-rebuild --rollback` as long as they aren't garbage collected.
         maxGenerations = 10;
 
-        # The firmware's fallback path (used if the "Limine" boot entry is
-        # ever lost, e.g. after a firmware reset) gets a copy of Limine.
-        # This runs after the installer has signed Limine and enrolled the
-        # config hash, so the copy works under Secure Boot too, and it finds
-        # the same /limine/limine.conf on the ESP.
+        # Runs after nixpkgs' installer has written limine.conf, enrolled
+        # its hash into Limine and (under Secure Boot) signed Limine.
+        # The install script runs with an empty PATH, so tools need full
+        # store paths.
         extraInstallCommands = let
           esp = config.boot.loader.efi.efiSysMountPoint;
+          lim = config.boot.loader.limine;
+          bin = "${pkgs.coreutils}/bin";
+          conf = "${esp}/limine/limine.conf";
+          efi = "${esp}/EFI/limine/BOOTX64.EFI";
+          distro = config.system.nixos.distroName;
         in ''
-          mkdir -p ${esp}/EFI/BOOT
-          cp ${esp}/EFI/limine/BOOTX64.EFI ${esp}/EFI/BOOT/BOOTX64.EFI
+          # 1. Menu group: "NixOS" instead of nixpkgs' hard-coded
+          #    "NixOS default profile".
+          ${pkgs.gnused}/bin/sed -i 's|^/+${distro} default profile$|/+${distro}|' ${conf}
+
+          # 2. That edit changed limine.conf, so its enrolled hash no longer
+          #    matches. Redo the installer's last steps on a fresh Limine:
+          #    enroll the new hash (same BLAKE2B the installer computes)
+          #    and re-sign it for Secure Boot.
+          ${lib.optionalString lim.enrollConfig ''
+            ${bin}/cp --no-preserve=mode ${lim.package}/share/limine/BOOTX64.EFI ${efi}
+            ${lim.package}/bin/limine enroll-config ${efi} \
+              "$(${bin}/b2sum ${conf} | ${bin}/cut -d' ' -f1)"
+          ''}
+          ${lib.optionalString lim.secureBoot.enable ''
+            ${lim.secureBoot.sbctl}/bin/sbctl sign ${efi}
+          ''}
+
+          # 3. The firmware's fallback path (used if the "Limine" boot entry
+          #    is ever lost, e.g. after a firmware reset) gets a copy of the
+          #    finished (enrolled + signed) Limine; it reads the same
+          #    /limine/limine.conf on the ESP.
+          ${bin}/mkdir -p ${esp}/EFI/BOOT
+          ${bin}/cp ${efi} ${esp}/EFI/BOOT/BOOTX64.EFI
         '';
 
         # Windows Boot Manager on its own ESP (any drive). Under Secure Boot

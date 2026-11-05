@@ -74,8 +74,12 @@ and NixOS (development) with Secure Boot on.
   `/persist`) to discover missing state before it's lost.
 
 ## Phase 4 — Secure Boot (Limine) + Legion dual boot
-Status: Limine module done (`modules/system/limine`, 2026-11-05), yoga opted in;
-Secure Boot keys not enrolled yet. Replaces the earlier lanzaboote plan:
+Status: done 2026-11-05. Limine + Secure Boot (sbctl keys, `--microsoft`) on
+yoga and legion; legion dual boots Windows (own NVMe) from the Limine menu with
+Secure Boot on. Left: delete systemd-boot leftovers on legion's ESP
+(`EFI/systemd`, `EFI/nixos`, `loader/`, "Linux Boot Manager" NVRAM entry);
+`/var/lib/sbctl` has no off-machine backup (recovery = reset firmware to Setup
+Mode and re-enroll). Replaces the earlier lanzaboote plan:
 nixpkgs' `boot.loader.limine.secureBoot` signs Limine with sbctl and enrolls a
 hash of limine.conf into the binary; every kernel/initrd path carries a blake2b
 hash, so only our generations boot. Editor is forced off under Secure Boot.

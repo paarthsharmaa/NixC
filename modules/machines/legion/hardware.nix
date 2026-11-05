@@ -40,5 +40,10 @@
 
     # CPU microcode option
     hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
+    # nixos-hardware assumes the AMD iGPU is at PCI:5:0:0; on this machine
+    # `lspci` shows it at 06:00.0, so PRIME offload (Default entry, hybrid
+    # firmware mode) would point at the wrong device. Unused in DDG mode.
+    hardware.nvidia.prime.amdgpuBusId = "PCI:6:0:0";
   };
 }

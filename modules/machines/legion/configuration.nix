@@ -1,5 +1,15 @@
 {...}: {
   flake.nixosModules.legionConfiguration = {config, ...}: {
+    # Windows lives on its own drive (Samsung 1 TB, nvme1n1) with its own
+    # 200 MB ESP (nvme1n1p1); Limine chainloads its bootmgfw.efi from there.
+    nixc.boot.windowsEsp = "9cd65e0b-9c26-43b8-83c6-350454ef44b1";
+
+    # Limine is signed with the sbctl keys enrolled in this machine's firmware
+    # (2026-11-05, with Microsoft's keys for Windows and the NVIDIA option ROM)
+    # and its config is hash-locked (docs/roadmap-hardening.md, Phase 4).
+    # Keys live in /var/lib/sbctl: back them up.
+    boot.loader.limine.secureBoot.enable = true;
+
     # Work around patchelf corrupting NVIDIA executables when both operations
     # run together: https://github.com/NixOS/nixpkgs/issues/576412.
     hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable.overrideAttrs (old: {
