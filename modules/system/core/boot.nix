@@ -1,8 +1,13 @@
 {...}: {
-  flake.nixosModules.bootloader = {pkgs, ...}: {
+  flake.nixosModules.bootloader = {
+    lib,
+    pkgs,
+    ...
+  }: {
     boot = {
       loader = {
-        systemd-boot.enable = true;
+        # mkDefault: hosts importing `limine` switch it off.
+        systemd-boot.enable = lib.mkDefault true;
         efi.canTouchEfiVariables = true;
       };
 

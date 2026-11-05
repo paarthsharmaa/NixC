@@ -8,6 +8,9 @@ opt.termguicolors = true
 opt.cursorline = true
 -- No "~" on the empty lines after the end of a file.
 opt.fillchars:append({ eob = " " })
+-- Floating windows (hover, diagnostics, popups) get a rounded border: their
+-- backgrounds are see-through (config/matugen.lua), the border outlines them.
+opt.winborder = "rounded"
 opt.showmode = false
 
 -- Editing

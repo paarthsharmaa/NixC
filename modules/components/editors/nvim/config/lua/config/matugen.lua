@@ -71,6 +71,51 @@ function M.lualine_theme()
 	}
 end
 
+-- Groups that keep their background: selections and search matches need a
+-- real highlight to be visible.
+local keep_bg = {
+	Visual = true,
+	VisualNOS = true,
+	Search = true,
+	IncSearch = true,
+	CurSearch = true,
+	Substitute = true,
+	PmenuSel = true,
+	PmenuThumb = true,
+	WildMenu = true,
+	QuickFixLine = true,
+	TermCursor = true,
+}
+
+-- Clear every highlight whose background is one of the editor surfaces
+-- (base00/base01), whatever plugin defined it: git signs, diff lines,
+-- popups, which-key, completion... It also runs whenever lazy.nvim loads
+-- a plugin, so plugins that aren't loaded yet are covered when they are.
+function M.clear_surfaces()
+	local c = M.colors
+	if not c then
+		return
+	end
+	local surfaces = {
+		[tonumber(c.base00:sub(2), 16)] = true,
+		[tonumber(c.base01:sub(2), 16)] = true,
+	}
+	for name, hl in pairs(vim.api.nvim_get_hl(0, {})) do
+		if not hl.link and hl.bg and surfaces[hl.bg] and not keep_bg[name] then
+			hl.bg = nil
+			hl.ctermbg = nil
+			vim.api.nvim_set_hl(0, name, hl)
+		end
+	end
+end
+
+vim.api.nvim_create_autocmd("User", {
+	pattern = "LazyLoad",
+	callback = function()
+		vim.schedule(M.clear_surfaces)
+	end,
+})
+
 function M.load()
 	local ok, palette = pcall(dofile, path)
 
@@ -103,6 +148,8 @@ function M.load()
 	vim.api.nvim_set_hl(0, "CursorLineNr", { fg = colors.base0D, bold = true })
 	vim.api.nvim_set_hl(0, "SnacksPickerListCursorLine", { fg = colors.base0D, bold = true })
 	vim.api.nvim_set_hl(0, "SnacksPickerCursorLine", { fg = colors.base0D, bold = true })
+
+	M.clear_surfaces()
 
 	-- Let plugins re-read the new colors.
 	vim.api.nvim_exec_autocmds("ColorScheme", { pattern = "matugen" })

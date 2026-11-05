@@ -3,6 +3,21 @@
     networking.hostName = "yoga";
     system.stateVersion = "26.05";
 
+    # Limine is signed + its config hash-locked once sbctl keys are enrolled
+    # (steps: docs/roadmap-hardening.md, Phase 4). Flip after enrolling:
+    # boot.loader.limine.secureBoot.enable = true;
+
+    # GNOME text-scaling-factor: scales GTK apps and the *whole* UI of
+    # Electron apps and browsers (LibreWolf, Brave) without touching the
+    # monitor scale (kitty, quickshell). Browsers react much more than
+    # Electron apps, so keep 1.0 and zoom Obsidian/VSCodium in-app (Ctrl +).
+    # System dconf *default*: `gsettings set` overrides it, `reset` falls back.
+    programs.dconf.profiles.user.databases = [
+      {
+        settings."org/gnome/desktop/interface".text-scaling-factor = 1.00;
+      }
+    ];
+
     # Always charge to 100% (no Lenovo "conservation mode" 60% limit).
     #
     # Two things can turn the limit on at boot:

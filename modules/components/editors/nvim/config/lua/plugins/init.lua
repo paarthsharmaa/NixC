@@ -82,6 +82,7 @@ return {
 
 		opts = {
 			delay = 300,
+			win = { border = "rounded" },
 		},
 	},
 }

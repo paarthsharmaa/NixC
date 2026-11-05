@@ -1,6 +1,6 @@
 # Roadmap: hardening NixC (impermanence, secrets, LUKS, Secure Boot, dual boot)
 
-Status: **planned, not started** (written 2026-11-04). Start this in a fresh session:
+Status: Phase 4 (Limine) started 2026-11-05; rest planned (written 2026-11-04). Start this in a fresh session:
 "read docs/roadmap-hardening.md and let's start phase N".
 
 Goal: give the dendritic/homeless flake hand-written versions of the features
@@ -24,7 +24,7 @@ and NixOS (development) with Secure Boot on.
   Back up first; do one machine at a time.
 
 ## Phase 0 — prep (no reinstall)
-- Add inputs: `disko`, `impermanence`, `lanzaboote`, `sops-nix` (all
+- Add inputs: `disko`, `impermanence`, `sops-nix` (all
   `inputs.nixpkgs.follows = "nixpkgs"`).
 - Add a small `options.nixc.*` host-values module (username, persist path),
   like nixy's `nixy.username`, so modules stop hard-coding `paarth`.
@@ -48,7 +48,7 @@ and NixOS (development) with Secure Boot on.
 
 ## Phase 2 — disko + LUKS (reinstall per host)
 - `modules/machines/<host>/_disko.nix` (nixy layout):
-  ESP vfat `/boot` (≥1 GiB so lanzaboote UKIs fit) → LUKS2 `crypted`
+  ESP vfat `/boot` (≥1 GiB: Limine copies every kept generation's kernel+initrd there) → LUKS2 `crypted`
   (`allowDiscards`) → btrfs subvolumes `/nix`, `/persist`, (`/swap` with swapfile
   for hibernate), `/` = tmpfs (`size=…, mode=755`).
 - `fileSystems."/persist".neededForBoot = true`.
@@ -73,29 +73,42 @@ and NixOS (development) with Secure Boot on.
 - Workflow help: a `persist-diff` script (find files on `/` not in the store or
   `/persist`) to discover missing state before it's lost.
 
-## Phase 4 — Secure Boot (lanzaboote) + Legion dual boot
-- Module `modules/system/secureboot/`: `inputs.lanzaboote.nixosModules.lanzaboote`,
-  `boot.loader.systemd-boot.enable = lib.mkForce false`,
-  `boot.lanzaboote = { enable = true; pkiBundle = "/var/lib/sbctl"; }`, `sbctl`.
-- One-time per machine: `sbctl create-keys` → firmware Setup Mode → rebuild →
-  `sbctl enroll-keys --microsoft` (Microsoft keys keep Windows + GPU option ROMs
-  booting) → enable Secure Boot. Verify with `bootctl status` / `sbctl verify`.
-- **Legion dual boot**:
-  - Install Windows first (own partitions), then NixOS. Prefer a separate disk
-    or at least separate partitions; shared ESP must be big enough.
-  - Windows appears in systemd-boot automatically if on the same ESP; if it's on
-    another ESP/disk, check what lanzaboote supports for extra entries
-    (`boot.loader.systemd-boot.windows` only applies to plain systemd-boot) —
-    verify before relying on it.
-  - **BitLocker**: save the recovery key before enrolling Secure Boot keys —
-    changing the Secure Boot DB triggers BitLocker recovery.
-  - Set `time.hardwareClockInLocalTime = true` or set Windows to UTC
-    (`RealTimeIsUniversal`) to stop clock drift between OSes.
-  - Disable Windows Fast Startup (keeps NTFS dirty/locked).
-  - Optional: `boot.loader.timeout`, `systemctl reboot --boot-loader-entry=…`
-    keybind/script for "reboot into Windows".
-  - NVIDIA: keep the patchelf/zenpower workarounds in `legionConfiguration`
-    until the upstream issues close.
+## Phase 4 — Secure Boot (Limine) + Legion dual boot
+Status: Limine module done (`modules/system/limine`, 2026-11-05), yoga opted in;
+Secure Boot keys not enrolled yet. Replaces the earlier lanzaboote plan:
+nixpkgs' `boot.loader.limine.secureBoot` signs Limine with sbctl and enrolls a
+hash of limine.conf into the binary; every kernel/initrd path carries a blake2b
+hash, so only our generations boot. Editor is forced off under Secure Boot.
+- Theme is static (CachyOS look: `limine-splash.png`, Catppuccin Mocha):
+  under Secure Boot the config is hash-locked, so no runtime/matugen theming.
+- Host opt-in: add `limine` to the host's module list (core's systemd-boot is
+  `mkDefault`, Limine turns it off).
+- One-time per machine, after Limine boots fine:
+  1. Firmware: Secure Boot → reset to **Setup Mode** (clears PK).
+  2. `sudo sbctl create-keys` → `sudo sbctl enroll-keys --microsoft`
+     (Microsoft keys keep Windows, GPU option ROMs and firmware tools booting).
+  3. Host config: `boot.loader.limine.secureBoot.enable = true;` → `nrs`.
+  4. `sudo sbctl verify` (Limine EFI signed) → firmware: enable Secure Boot →
+     `sbctl status` / `bootctl status` show it on.
+  - Back up `/var/lib/sbctl` (keys). With impermanence it must be persisted.
+  - The old systemd-boot NVRAM entry stays as a fallback only while Secure Boot
+    is off (it's unsigned). Recovery = turn Secure Boot off in firmware.
+- **Legion dual boot**: install Windows (own disk preferred), then set
+  `nixc.boot.windowsEsp = "<PARTUUID of Windows ESP>";` (`lsblk -o
+  NAME,PARTUUID,PARTTYPENAME`). Entry uses `protocol: efi` → firmware verifies
+  Microsoft's signature, no Limine hash, survives Windows updates.
+  - **BitLocker**: save the recovery key before enrolling keys / chainloading.
+  - `time.hardwareClockInLocalTime = true` or Windows `RealTimeIsUniversal`.
+  - Disable Windows Fast Startup.
+  - Windows is listed after the generations; consider `remember_last_entry`
+    (via `boot.loader.limine.extraConfig`) on Legion.
+- **TPM2 auto-unlock with Limine** (ties into Phase 2): Limine does not
+  measure kernel/initrd into TPM PCRs, so bind to PCR 7 (Secure Boot state +
+  our enrolled keys) — safe only because Secure Boot + enrolled config hash
+  stop anything but our signed generations from booting. Add PCR 15
+  (`tpm2-measure-pcr=yes` in crypttab, systemd initrd) so a swapped root
+  volume can't receive the key. Re-enroll after changing Secure Boot keys.
+  Keep a passphrase + recovery key slot.
 
 ## Phase 5 — extras from nixy worth considering
 - `kernel-hardening` sysctls module (dmesg/kptr restrict, ptrace scope, bpf…);

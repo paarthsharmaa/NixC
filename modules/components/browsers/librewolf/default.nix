@@ -21,6 +21,11 @@
 
         // Current combined cookie/storage shutdown category.
         pref("privacy.clearOnShutdown_v2.cookiesAndStorage", false);
+
+        // No browser-only UI scale: follow the system (monitor scale +
+        // GNOME text-scaling-factor, set per machine). Clears any value
+        // left in the profile's prefs.js from about:config.
+        clearPref("layout.css.devPixelsPerPx");
       '';
     };
   };
