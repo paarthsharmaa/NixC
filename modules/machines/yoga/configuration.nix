@@ -3,9 +3,10 @@
     networking.hostName = "yoga";
     system.stateVersion = "26.05";
 
-    # Limine is signed + its config hash-locked once sbctl keys are enrolled
-    # (steps: docs/roadmap-hardening.md, Phase 4). Flip after enrolling:
-    # boot.loader.limine.secureBoot.enable = true;
+    # Limine is signed with the sbctl keys enrolled in this machine's firmware
+    # (2026-11-05) and its config is hash-locked (docs/roadmap-hardening.md,
+    # Phase 4). Keys live in /var/lib/sbctl: back them up.
+    boot.loader.limine.secureBoot.enable = true;
 
     # GNOME text-scaling-factor: scales GTK apps and the *whole* UI of
     # Electron apps and browsers (LibreWolf, Brave) without touching the

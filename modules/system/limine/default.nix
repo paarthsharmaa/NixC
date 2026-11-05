@@ -41,6 +41,18 @@
         # `nixos-rebuild --rollback` as long as they aren't garbage collected.
         maxGenerations = 10;
 
+        # The firmware's fallback path (used if the "Limine" boot entry is
+        # ever lost, e.g. after a firmware reset) gets a copy of Limine.
+        # This runs after the installer has signed Limine and enrolled the
+        # config hash, so the copy works under Secure Boot too, and it finds
+        # the same /limine/limine.conf on the ESP.
+        extraInstallCommands = let
+          esp = config.boot.loader.efi.efiSysMountPoint;
+        in ''
+          mkdir -p ${esp}/EFI/BOOT
+          cp ${esp}/EFI/limine/BOOTX64.EFI ${esp}/EFI/BOOT/BOOTX64.EFI
+        '';
+
         # Windows Boot Manager on its own ESP (any drive). Under Secure Boot
         # the firmware checks Microsoft's signature on it, so no Limine hash
         # is needed and Windows updates don't break the entry.
