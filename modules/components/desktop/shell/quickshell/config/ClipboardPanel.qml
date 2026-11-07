@@ -8,7 +8,7 @@ import "services"
 
 // Clipboard history: a sheet at the bottom edge of the screen, search and
 // history on the left, preview on the right. Same colors/shapes as the
-// pill and control center (Colors.background, color0 cards, 28px corners).
+// top island (NotchShape mirrored onto the bottom edge, color0 cards).
 //
 // Data comes from `clipboard-helper` (modules/components/desktop/services/
 // clipboard): cliphist for the history, plus rendered previews for images,
@@ -177,7 +177,8 @@ Scope {
 
             screen: Quickshell.screens[0]
             anchors.bottom: true
-            implicitWidth: 960
+            // Body + the two fillets curving into the bottom edge.
+            implicitWidth: 960 + 2 * shape.fillet
             implicitHeight: 480
             color: "transparent"
 
@@ -194,18 +195,26 @@ Scope {
                 onCleared: root.open = false
             }
 
-            Rectangle {
-                id: sheet
-                anchors.fill: parent
+            // Same shape as the top notch, mirrored onto the bottom edge.
+            NotchShape {
+                id: shape
+                edge: "bottom"
+                bodyWidth: 960
+                bodyHeight: win.height
+                radius: 28
+                fillet: 14
+                color: Settings.notchColor === "black" ? "#000000" : Colors.background
+            }
 
-                color: Colors.background
-                border.width: 1
-                border.color: Qt.rgba(1, 1, 1, 0.09)
-                topLeftRadius: 28
-                topRightRadius: 28
-                // Flush with the screen edge at the bottom.
-                bottomLeftRadius: 0
-                bottomRightRadius: 0
+            // Clicks on the transparent fillet corners go to the windows below.
+            Region { id: sheetMask; item: sheet }
+            mask: sheetMask
+
+            Item {
+                id: sheet
+                x: shape.fillet
+                width: 960
+                height: parent.height
 
                 FocusScope {
                     anchors { fill: parent; margins: 18 }

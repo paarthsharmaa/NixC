@@ -113,6 +113,7 @@ ShellRoot {
     IpcHandler {
         target: "island"
 
+        function expand():        void { root.toggle("expanded")      }
         function launcher():      void { root.toggle("launcher")      }
         function controlcenter(): void { root.toggle("controlcenter") }
         function mixer():         void { root.toggle("controlcenter") }
@@ -143,14 +144,13 @@ ShellRoot {
         }
     }
 
-    // Single surface again -- see Pill.qml's header comment for why (exact
-    // github animation match was the priority; the previous split-surface
-    // Loader/displayPanel/panelClosing plumbing that lived here is gone).
+    // The top island (notch or pill, see Pill.qml).
     Pill {
         screen:     Quickshell.screens[0]
         panel:      root.panel
         osdVisible: root.osdVisible && root.panel === ""
         osdType:    root.osdType
         onDismiss:  root.panel = ""
+        onRequest:  name => root.toggle(name)
     }
 }
