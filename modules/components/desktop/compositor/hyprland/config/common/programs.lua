@@ -37,6 +37,9 @@ return {
     screenshot =
         "screenshot-region",
 
+    -- Quickshell's clipboard sheet; fuzzel picker if quickshell is down.
     clipboard =
-        "clipboard-picker",
+        "qs ipc call island clipboard "
+        .. ">/dev/null 2>&1 "
+        .. "|| clipboard-picker",
 }

@@ -89,7 +89,9 @@ FocusScope {
 
             TextInput {
                 id: search
-                anchors { fill: parent; leftMargin: 14; rightMargin: 14; topMargin: 4; bottomMargin: 4 }
+                anchors { fill: parent; leftMargin: 14; rightMargin: 14 }
+                // Without this the text/cursor sit at the top of the box.
+                verticalAlignment: TextInput.AlignVCenter
                 color: Colors.foreground; font.pixelSize: 17; font.family: "JetBrainsMono Nerd Font"
                 selectionColor: Colors.color8; clip: true
 
@@ -111,9 +113,13 @@ FocusScope {
         ListView {
             id: list
             width: parent.width
-            height: Math.min(root.filteredApps.length * 58, 230)
+            // Fill the rest of the panel (Pill.qml sizes it for 6 rows).
+            // clip: the list scrolls to keep the selected row visible, and
+            // without clipping the scrolled-away rows drew over the search box.
+            height: parent.height - 50 - parent.spacing
+            clip: true
             model: appModel
-            boundsBehavior: Flickable.StopAtBounds; spacing: 4; interactive: false
+            boundsBehavior: Flickable.StopAtBounds; spacing: 4
 
             delegate: Rectangle {
                 id: row

@@ -101,8 +101,14 @@ ShellRoot {
 
     function toggle(name: string): void {
         root.panel = (root.panel === name) ? "" : name
-        if (root.panel !== "") root.osdVisible = false
+        if (root.panel !== "") {
+            root.osdVisible = false
+            clipboardPanel.open = false
+        }
     }
+
+    // Bottom sheet, separate from the pill (ClipboardPanel.qml).
+    ClipboardPanel { id: clipboardPanel }
 
     IpcHandler {
         target: "island"
@@ -116,6 +122,10 @@ ShellRoot {
         function media():         void { root.toggle("media")         }
         function powerprofile():  void { root.toggle("powerprofile")  }
         function visualizer():    void { root.toggle("visualizer")    }
+        function clipboard():     void {
+            root.panel = ""
+            clipboardPanel.open = !clipboardPanel.open
+        }
 
         function close(): void {
             root.panel = ""

@@ -9,7 +9,9 @@
         pkgs.wl-clipboard
         pkgs.cliphist
         pkgs.fuzzel
+        # Fallback picker (fuzzel) when quickshell isn't running.
         self'.packages.clipboard-picker
+        self'.packages.clipboard-helper
       ];
 
       systemd.user.services = {
@@ -58,6 +60,30 @@
           | cliphist decode \
           | wl-copy
       '';
+    };
+
+    # Backend for quickshell's clipboard panel (list, preview, copy,
+    # delete). The script lives next to this file; import-tree only loads
+    # .nix files, so a .sh here is just data that readFile pulls in.
+    # writeShellApplication puts runtimeInputs first on PATH and runs
+    # shellcheck at build time. LibreOffice is not listed: office previews
+    # use `soffice` from the system if it's installed (qol preset).
+    packages.clipboard-helper = pkgs.writeShellApplication {
+      name = "clipboard-helper";
+
+      runtimeInputs = with pkgs; [
+        cliphist
+        wl-clipboard
+        coreutils
+        findutils
+        gnugrep
+        gnused
+        file
+        poppler-utils # pdftoppm, pdfinfo
+        ffmpegthumbnailer
+      ];
+
+      text = builtins.readFile ./clipboard-helper.sh;
     };
   };
 }

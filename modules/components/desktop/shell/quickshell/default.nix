@@ -72,6 +72,7 @@
             self'.packages.awww
             self'.packages.theme-apply
             self'.packages.swaync
+            self'.packages.clipboard-helper
 
             # Apps launched from the launcher. `uwsm app` checks that a
             # desktop entry's Exec (e.g. `dolphin`) exists in *its* PATH,

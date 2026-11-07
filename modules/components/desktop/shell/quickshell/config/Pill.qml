@@ -48,7 +48,7 @@ PanelWindow {
     readonly property var dimMap: ({
         "":               { w: 260, h: 48,  r: 24 },
         "osd":            { w: 340, h: 48,  r: 24 },
-        "launcher":       { w: 600, h: 420, r: 28 },
+        "launcher":       { w: 600, h: 460, r: 28 }, // 16+50+10 + 6 rows (58+4) + 16
         "scriptlauncher": { w: 600, h: 420, r: 28 },
         "controlcenter":  { w: 600, h: 860, r: 28 },
         "sysinfo":        { w: 540, h: 460, r: 28 },

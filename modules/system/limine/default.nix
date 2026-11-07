@@ -42,7 +42,8 @@
         enable = true;
         efiSupport = true;
         # Each generation's kernel + initrd is copied to the 1 GiB ESP;
-        # 10 keeps it from filling up. Older ones stay bootable via
+        # 10 keeps it from filling up (5 shown, 5 in "Older generations",
+        # see extraInstallCommands). Older ones stay bootable via
         # `nixos-rebuild --rollback` as long as they aren't garbage collected.
         maxGenerations = 10;
 
@@ -57,12 +58,27 @@
           conf = "${esp}/limine/limine.conf";
           efi = "${esp}/EFI/limine/BOOTX64.EFI";
           distro = config.system.nixos.distroName;
+          visibleGenerations = 5;
         in ''
           # 1. Menu group: "NixOS" instead of nixpkgs' hard-coded
           #    "NixOS default profile".
           ${pkgs.gnused}/bin/sed -i 's|^/+${distro} default profile$|/+${distro}|' ${conf}
 
-          # 2. That edit changed limine.conf, so its enrolled hash no longer
+          # 2. Only the newest ${toString visibleGenerations} generations sit at the top;
+          #    the rest move one level down into a collapsed "Older
+          #    generations" folder (Enter opens it, arrows scroll).
+          #    Generations are `//Generation N` lines, newest first, and the
+          #    number of leading `/` is the nesting depth.
+          ${pkgs.gawk}/bin/awk -v keep=${toString visibleGenerations} '
+            /^# .* boot entries end here/ { inmenu = 0 }
+            inmenu && /^\/\/[^\/]/ { if (++gen == keep + 1) print "//Older generations" }
+            inmenu && gen > keep && /^\// { $0 = "/" $0 }
+            { print }
+            /^\/\+/ { inmenu = 1 }
+          ' ${conf} > ${conf}.tmp
+          ${bin}/mv ${conf}.tmp ${conf}
+
+          # 3. Those edits changed limine.conf, so its enrolled hash no longer
           #    matches. Redo the installer's last steps on a fresh Limine:
           #    enroll the new hash (same BLAKE2B the installer computes)
           #    and re-sign it for Secure Boot.
@@ -75,7 +91,7 @@
             ${lim.secureBoot.sbctl}/bin/sbctl sign ${efi}
           ''}
 
-          # 3. The firmware's fallback path (used if the "Limine" boot entry
+          # 4. The firmware's fallback path (used if the "Limine" boot entry
           #    is ever lost, e.g. after a firmware reset) gets a copy of the
           #    finished (enrolled + signed) Limine; it reads the same
           #    /limine/limine.conf on the ESP.

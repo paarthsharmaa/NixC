@@ -38,3 +38,15 @@ hl.layer_rule({
 
     animation = "slide top",
 })
+
+-- Quickshell clipboard sheet rises from the bottom edge.
+hl.layer_rule({
+    name =
+        "clipboard-slide",
+
+    match = {
+        namespace = "^quickshell:clipboard$",
+    },
+
+    animation = "slide bottom",
+})
